@@ -7,6 +7,7 @@ var app = express();
 var videoR = require('./routes/videos')(app);
 var fileR = require('./routes/file_routes')(app);
 var deployDir = "./build";
+var os = require("os");
 app.enable('strict routing');
 
 app.configure(function () {
@@ -14,7 +15,8 @@ app.configure(function () {
     app.set('views', deployDir + '/views');
 
     app.use(express.methodOverride());
-    app.use(express.bodyParser());
+    app.use(express.json());
+    app.use(express.urlencoded());
     app.use(express.responseTime());
 
     // strip slashes
@@ -45,7 +47,7 @@ app.configure(function () {
 
 var port = 8080;
 app.listen(port);
-console.log('Starting a server on port: ' + port);
+console.log('Get to app at http://' + os.hostname() + ":" + port);
 
 // Routes
 app.get('/', function (req, res, next) {
