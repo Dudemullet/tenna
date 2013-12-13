@@ -1,0 +1,26 @@
+{
+  "name": "vmv",
+  "version": "0.0.1",
+  "engines": {
+    "node": "*",
+    "npm": "*"
+  },
+  "private": true,
+  "dependencies": {
+    "grunt": "*",
+    "grunt-cli": "*",
+    "express": "*",
+    "jade": "*",
+    "grunt-contrib-clean": "*",
+    "grunt-contrib-copy": "*",
+    "grunt-contrib-less": "*",
+    "grunt-contrib-watch": "*",
+    "handbrake-js": "~0.1.6"
+  },
+  "devDependencies": {
+    "grunt-contrib-less": "~0.8.3"
+  },
+  "scripts":{
+    "postinstall":"scripts/app.js"
+  }
+}

@@ -1,0 +1,21 @@
+extends layout
+
+block vars
+    - var title = "vmv"
+
+block content
+    h1 Videos
+    - for (var i in videos) {
+        p #{videos[i].name}
+        video(width="750px", controls="true")
+            source(src="#{videos[i].path}",type="video/mp4")
+            track(src="#{videos[i].sub}", kind="subtitle", srclang="en-US", label="English")
+        a.btn.btn-success(href="#{videos[i].path}") Download
+    -}
+
+    script.
+        document.ready = function(){
+            $("video").on("click",function(event){
+                event.target.play();
+            })
+        }

@@ -1,0 +1,14 @@
+extends layout
+
+block vars
+    - var title = "vmv"
+
+block content
+    h1 Files
+    - for (var i in files) {
+        a(href="/dl#{files[i].path}")
+            img(src="#{files[i].path}")
+    -}
+
+block footer
+    div foot foot foot

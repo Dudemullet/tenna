@@ -1,0 +1,23 @@
+extends layout
+
+block vars
+    - var title = "Cochi"
+
+block content
+    h1 Cochi
+
+    h2 Videos
+    .row
+        - for (var i in videos) {
+            .col-sm-3
+                .tile.bg-2 #{videos[i].name}
+        - }
+
+    h2 Files
+    .row
+        - for (var x in files) {
+            .col-sm-3
+                .tile.bg-4 #{files[x].name}
+        - }
+block footer
+    
