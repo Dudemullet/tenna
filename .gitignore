@@ -1,2 +1,5 @@
 node_modules
 build
+src/bin/wallpapers/*
+src/bin/videos/*
+
