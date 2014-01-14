@@ -26,7 +26,7 @@ module.exports = function(app){
             files.forEach(function(val, i, arr){
                 arr[i] = val;
                 fObjs.push({
-                    name:val,
+                    name:val.substr(0,val.lastIndexOf(".")),
                     path: videoDir+val
                 });
             });

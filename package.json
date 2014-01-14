@@ -15,12 +15,13 @@
     "grunt-contrib-copy": "*",
     "grunt-contrib-less": "*",
     "grunt-contrib-watch": "*",
-    "handbrake-js": "~0.1.6"
+    "handbrake-js": "~0.1.6",
+    "node-dir": "*"
   },
   "devDependencies": {
     "grunt-contrib-less": "~0.8.3"
   },
-  "scripts":{
-    "postinstall":"scripts/app.js"
+  "scripts": {
+    "postinstall": "scripts/app.js"
   }
 }
