@@ -20,8 +20,5 @@
   },
   "devDependencies": {
     "grunt-contrib-less": "~0.8.3"
-  },
-  "scripts": {
-    "postinstall": "scripts/app.js"
   }
 }
