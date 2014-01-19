@@ -8,7 +8,6 @@ html(lang='en')
     body(class=locals.page ? 'page-' + locals.page + (locals.page === 'index' ? '' : ' page-secondary') : '')
         .container
             block content
-            include blocks/nav
     footer
         block footer
-    script(type='text/javascript', src='js/libs/jquery-2.0.3.min.js')
+    script(type='text/javascript', src='/js/libs/jquery-2.0.3.min.js')

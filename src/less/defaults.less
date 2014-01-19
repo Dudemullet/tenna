@@ -2,3 +2,45 @@ html,body {
     background:@background-color;
     color:@font-color;
 }
+
+.row > * {
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.tile {
+    border-radius: 0;
+    padding: 0;
+
+    .img-wrapper,
+    .video-wrapper {
+        position: relative;
+        color:#FFF;
+        display:block;
+        height:150px;
+        .action-icon {
+            @icon-font-size:70px;
+            position: absolute;
+            font-size: @icon-font-size;
+            left: 0;
+            right: 0;
+            margin: 0 auto;
+            top: (@icon-font-size / 2);
+        }
+        .bg-img {
+            height:150px;
+            position: relative;
+            overflow: hidden;
+            background-position:50% 50%;
+            opacity: 0.3;
+        }
+    }
+
+    .tile-footer {
+        padding: 14px;
+        text-align: left;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
