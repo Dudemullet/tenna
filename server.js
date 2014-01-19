@@ -1,18 +1,37 @@
 'use strict';
 
-var fs = require('fs');
-var express = require('express');
-var handbrake = require("handbrake-js");
-var app = express();
-var videoR = require('./routes/videos')(app);
-var fileR = require('./routes/file_routes')(app);
-var deployDir = "./build";
-var os = require("os");
-app.enable('strict routing');
+var 
+    express = require('express'),
+    app = express(),
+    fs = require('fs'),
+    deployDir = "./build/",
+    config = require(deployDir + "config.json");
+
+function arrToObj(arr){
+    var a = {};
+    var i = arr.length;
+    while(i--)
+        a[arr[i]] = true;
+
+    return a;
+}
+
+app.set("port",config.port);
+app.set("fileExtensions", arrToObj(config.fileExtensions));
+
+var 
+    port = app.get("port") || 8080,
+    videoR = require('./routes/videos')(app),
+    fileR = require('./routes/file_routes')(app),
+    encoder = require('./routes/encode')(app),
+    setup = require('./routes/setup')(app),
+    os = require("os");
 
 app.configure(function () {
     app.set('view engine', 'jade');
-    app.set('views', deployDir + '/views');
+    app.set('views', deployDir + 'views');
+    
+    app.enable('strict routing');
 
     app.use(express.methodOverride());
     app.use(express.json());
@@ -20,24 +39,19 @@ app.configure(function () {
     app.use(express.responseTime());
 
     // strip slashes
-    app.use(function (req, res, next) {
-        if (req.url.substr(-1) === '/' && req.url.length > 1) {
-            res.redirect(301, req.url.slice(0, -1));
-        } else {
-            next();
-        }
-    });
+    // app.use(function (req, res, next) {
+    //     if (req.url.substr(-1) === '/' && req.url.length > 1) {
+    //         res.redirect(301, req.url.slice(0, -1));
+    //     } else {
+    //         next();
+    //     }
+    // });
 
     // use the router
     app.use(app.router);
 
     // use the static router
     app.use(express.static(deployDir));
-
-    // if nothing matched, send 404
-    app.use(function (req, res) {
-        res.status(404).sendfile(deployDir+ '/404.html');
-    });
     
     app.use(express.errorHandler({
         dumpExceptions: true,
@@ -45,7 +59,6 @@ app.configure(function () {
     }));
 });
 
-var port = 8080;
 app.listen(port);
 console.log('Get to app at http://' + os.hostname() + ":" + port);
 
@@ -53,10 +66,11 @@ console.log('Get to app at http://' + os.hostname() + ":" + port);
 app.get('/', function (req, res, next) {
     videoR.getMovies(function(files){
         var videos = files;
+
         fileR.getFiles(function(foundFiles){
             var out = {
-                "videos":videos.videos,
-                "files":foundFiles.files
+                "videos":videos.slice(0,10),
+                "files":foundFiles.files.slice(0,10)
             };
             res.render("index",out);
         });
@@ -67,38 +81,11 @@ app.get('/', function (req, res, next) {
 app.get('/dl/*/*', function(req, res){
     var path = req.path;
     var fileName = path.substr(path.lastIndexOf("/")+1);
-    var videoDir = '/wallpapers/';
+    var videoDir = 'wallpapers/';
     var sysVideoDir = deployDir + videoDir;
     
     res.set({
         "Content-type":"application/download"
     })
     res.sendfile(sysVideoDir + fileName);
-});
-
-app.get('/encode', function(req, res){
-    console.log("encoding video..");
-
-    var options = {
-        input: "unplayable.mp4",
-        output: "test.mp4",
-        encoder: "x264",
-        "keep-display-aspect":true,
-        modulus:16,
-        vb:"2500",
-        quality:"20",
-        "crop":"0:0:0:0"
-    };
-
-    handbrake.spawn(options)
-    .on("error", function(err){
-        console.log("ERROR: " + err.message);
-    })
-    .on("output", console.log)
-    .on("progress", function(progress){
-        console.log(progress.task + ": " + progress.percentComplete);
-    })
-    .on("complete", function(){ 
-        console.log("Done!"); 
-    });
 });

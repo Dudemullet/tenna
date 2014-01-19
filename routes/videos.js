@@ -1,51 +1,112 @@
 "use strict";
 var fs = require('fs');
+var escape = require('escape-html');
+var dirExp = require("node-dir");
+var express = require("express");
 
 module.exports = function(app) {
-    var deployDir = "./build";
-    var videoDir = '/videos/';
-    var sysVideoDir = deployDir + videoDir;
-
-    app.get('/videos', function(req, res, next){
-        getMovies(function(files){
-            res.render("videos",files);
-        })
-    });
-    app.get('/get/videos', function(req, res, next){
-
-        getMovies(function(x1){
-            res.send(x1);
+    var 
+        watchedDirs = ["/Users/lgutierrez/Sites/vita/build/videos"],
+        dirCollection = {},
+        videoList = [],
+        supportedFileFormats = app.get("fileExtensions") || "mp4";
+        
+    var setStaticDirs = function() {
+        watchedDirs.forEach(function(dir){
+            var parentDir = dir.substr(dir.lastIndexOf("/"));
+            parentDir = parentDir.replace(/ /g,'-')
+                        .replace(/[^\w-]+/g,'');
+            console.log("Parent Dir: "+ parentDir);
+            app.use("/"+parentDir,express.static(dir));
         });
+    }
+    setStaticDirs();
+
+    /*
+        Routes
+    */
+    app.get('/videos', function(req, res, next){
+
+        if(videoList.length <= 0){
+
+            getMoviesInWatchedDirs(function(err){
+                res.render("videos",{"videos":videoList});
+            });
+        }
+
+        res.render("videos",{"videos":videoList});
     });
 
-    var getMoviesAtDir = function(dir,fn){
-        fs.readdir(dir, function(err, files) { if(err) throw err;
-            var videosObj = {"videos":[]};
+    app.get('/get/videos', function(req, res, next){
+        if(!dirCollection){
+            getMoviesInWatchedDirs();
+        }
+        res.json(dirCollection);
+    });
 
-            files = files.filter(function(index){
-                return index.substr(index.lastIndexOf(".")+1) === "mp4";
-            })
+    /*
+        Methods
+    */
+    var getMoviesInWatchedDirs = function(cb) {
+        watchedDirs.forEach(function(dir){
 
-            files.forEach(function(val, i, arr){
-                var filename = val;
-                var path = videoDir + val;
-                videosObj.videos.push({
-                    "fileName":filename,
-                    "path":path,
-                    "name": filename.substr(0,filename.lastIndexOf(".")),
-                    "sub":videoDir + filename.substr(0,filename.lastIndexOf(".")) + ".vtt"
+            var staticDir = dir.substr(dir.lastIndexOf("/"));
+
+            dirExp.files(dir,function(err,files){ if(err) console.log(err);
+                // Get dem mp4's
+                var filteredVideos = files.filter(function(index){
+                    var fileNameExtension = index.substr(index.lastIndexOf(".")+1);
+                    console.log("file: + " + index);
+                    console.log("EXT: + " + fileNameExtension);
+                    console.log("test: " + supportedFileFormats[fileNameExtension] || false);
+                    return (supportedFileFormats[fileNameExtension] || false);
+                });
+
+                //Per video, construct a useful video object
+                filteredVideos.forEach(function(val,i,arr){
+                    var newVid = newVideo(val, staticDir);
+                    // console.log("VIDEO: " + newVid);
+                    addVideoToCollection(newVid);
                 });
             });
+        })
+    }
 
-            fn(videosObj);
-        });
-    };
-    var getMovies = function(fn){
-        return getMoviesAtDir(sysVideoDir,fn);
-    };
+    var addVideoToCollection = function(videoObj) {
+        dirCollection[videoObj.dir] = dirCollection[videoObj.dir] || [];
+        dirCollection[videoObj.dir].push(videoObj);
+        videoList.push(videoObj);
+    }
 
-    return { //module API
-        "getMoviesAtDir":getMoviesAtDir,
-        "getMovies":getMovies
-    };
+    var getMovies = function(cb) {
+        return cb(videoList);
+    }
+    var getMovieDirs = function(cb) {
+        return cb(dirCollection);
+    }
+
+    var newVideo = function(val, staticDir) {
+        var filename = val.substr(val.lastIndexOf("/")+1);
+        var folderKey = val.substr(0,val.lastIndexOf("/"));
+        
+        var strLen = staticDir.length;
+        var staticDirPath = val.substr(val.indexOf(staticDir)+strLen);
+        staticDir = staticDir.replace(/ /g,'-')
+                    .replace(/[^\w-]+/g,'');
+        return {
+            "stat": "/"+ staticDir + staticDirPath,
+            "dir": folderKey,
+            "parentDir":folderKey.substr(folderKey.lastIndexOf("/")),
+            "fileName": filename,
+            "path": escape(val),
+            "name": filename.substr(0,filename.lastIndexOf(".")),
+            "vttSub": videoDir + filename.substr(0,filename.lastIndexOf(".")) + ".vtt",
+            "srtSub": videoDir + filename.substr(0,filename.lastIndexOf(".")) + ".srt"
+        };
+    }
+
+    return {
+        "getMovies":getMovies,
+        "getMovieDirs":getMovieDirs
+    }
 }

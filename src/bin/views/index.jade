@@ -1,23 +1,28 @@
 extends layout
 
 block vars
-    - var title = "Cochi"
+    - var title = "VSM"
 
 block content
-    h1 Cochi
+    h1 Open conten manager
 
     h2 Videos
     .row
-        - for (var i in videos) {
-            .col-sm-3
-                .tile.bg-2 #{videos[i].name}
-        - }
+        each xar in videos
+            .col-xs-12.col-sm-4.col-md-3
+                .tile.bg-15
+                    a.video-wrapper(href="/videos/watch#{xar.path}")
+                        span.glyphicon.glyphicon-play.action-icon
+                    div.tile-footer.bg-16(title="#{xar.name}") #{xar.name}
 
     h2 Files
     .row
-        - for (var x in files) {
-            .col-sm-3
-                .tile.bg-4 #{files[x].name}
-        - }
+        each file in files
+            .col-xs-12.col-sm-4.col-md-3
+                .tile.bg-3
+                    a.img-wrapper(href="/dl#{file.path}")
+                        .bg-img(style="background-image:url('#{file.path}')")
+                        span.glyphicon.glyphicon-circle-arrow-down.action-icon
+                    div.tile-footer.bg-4(title="#{file.name}") #{file.name}
+
 block footer
-    
