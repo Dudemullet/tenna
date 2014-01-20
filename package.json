@@ -1,5 +1,5 @@
 {
-  "name": "vmv",
+  "name": "playertwo",
   "version": "0.0.1",
   "engines": {
     "node": "*",
@@ -16,9 +16,7 @@
     "grunt-contrib-less": "*",
     "grunt-contrib-watch": "*",
     "handbrake-js": "~0.1.6",
-    "node-dir": "*"
-  },
-  "devDependencies": {
-    "grunt-contrib-less": "~0.8.3"
+    "node-dir": "*",
+    "escape-html": "~1.0.1"
   }
 }

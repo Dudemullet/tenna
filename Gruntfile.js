@@ -4,8 +4,11 @@ module.exports = function(grunt) {
 
     grunt.initConfig({
         clean: {
-            build: ['build/'],
-            tmp: ['tmp/']
+            options : {
+                force: true
+            },
+            build: ['./build/'],
+            tmp: ['./tmp/']
         },
         copy: {
             assets: {

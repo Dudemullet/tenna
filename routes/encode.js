@@ -1,6 +1,5 @@
 "use strict";
 var handbrake = require("handbrake-js");
-var ffmpeg = require("ffmpeg");
 var child_process = require("child_process");
 module.exports = function(app){
     

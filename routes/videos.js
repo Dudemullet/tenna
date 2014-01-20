@@ -6,7 +6,7 @@ var express = require("express");
 
 module.exports = function(app) {
     var 
-        watchedDirs = ["/Users/lgutierrez/Sites/vita/build/videos"],
+        watchedDirs = ["./build/videos"],
         dirCollection = {},
         videoList = [],
         supportedFileFormats = app.get("fileExtensions") || "mp4";
@@ -16,7 +16,7 @@ module.exports = function(app) {
             var parentDir = dir.substr(dir.lastIndexOf("/"));
             parentDir = parentDir.replace(/ /g,'-')
                         .replace(/[^\w-]+/g,'');
-            console.log("Parent Dir: "+ parentDir);
+
             app.use("/"+parentDir,express.static(dir));
         });
     }
