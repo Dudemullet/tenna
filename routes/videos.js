@@ -1,8 +1,9 @@
 "use strict";
-var fs = require('fs');
-var escape = require('escape-html');
-var dirExp = require("node-dir");
-var express = require("express");
+
+var fs = require('fs'),
+    escape = require('escape-html'),
+    dirExp = require("node-dir"),
+    express = require("express");
 
 module.exports = function(app) {
     var 
@@ -52,24 +53,22 @@ module.exports = function(app) {
 
             var staticDir = dir.substr(dir.lastIndexOf("/"));
 
-            dirExp.files(dir,function(err,files){ if(err) console.log(err);
-                // Get dem mp4's
-                var filteredVideos = files.filter(function(index){
-                    var fileNameExtension = index.substr(index.lastIndexOf(".")+1);
-                    console.log("file: + " + index);
-                    console.log("EXT: + " + fileNameExtension);
-                    console.log("test: " + supportedFileFormats[fileNameExtension] || false);
-                    return (supportedFileFormats[fileNameExtension] || false);
-                });
+            dirExp.files(dir,function(err,files) { if(err) console.log(err);
+                // Get supported extensions files (mp4, avi, etc...)
+                var filteredVideos = files.filter(validExtensionsFilter);
 
                 //Per video, construct a useful video object
                 filteredVideos.forEach(function(val,i,arr){
                     var newVid = newVideo(val, staticDir);
-                    // console.log("VIDEO: " + newVid);
                     addVideoToCollection(newVid);
                 });
             });
         })
+    }
+
+    var validExtensionsFilter = function(index) {
+        var fileNameExtension = index.substr(index.lastIndexOf(".")+1);
+        return (supportedFileFormats[fileNameExtension] || false);
     }
 
     var addVideoToCollection = function(videoObj) {

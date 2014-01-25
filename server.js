@@ -38,15 +38,6 @@ app.configure(function () {
     app.use(express.urlencoded());
     app.use(express.responseTime());
 
-    // strip slashes
-    // app.use(function (req, res, next) {
-    //     if (req.url.substr(-1) === '/' && req.url.length > 1) {
-    //         res.redirect(301, req.url.slice(0, -1));
-    //     } else {
-    //         next();
-    //     }
-    // });
-
     // use the router
     app.use(app.router);
 
