@@ -53,14 +53,14 @@ module.exports = function(app) {
 
             var staticDir = dir.substr(dir.lastIndexOf("/"));
 
+            //Recursively get all files in dir
             dirExp.files(dir,function(err,files) { if(err) console.log(err);
-                // Get supported extensions files (mp4, avi, etc...)
+                // Get supported files with valid extensions (mp4, avi, etc...)
                 var filteredVideos = files.filter(validExtensionsFilter);
 
                 //Per video, construct a useful video object
                 filteredVideos.forEach(function(val,i,arr){
-                    var newVid = newVideo(val, staticDir);
-                    addVideoToCollection(newVid);
+                    addVideoToCollection( newVideo(val, staticDir) );
                 });
             });
         })
@@ -99,8 +99,7 @@ module.exports = function(app) {
             "fileName": filename,
             "path": escape(val),
             "name": filename.substr(0,filename.lastIndexOf(".")),
-            "vttSub": videoDir + filename.substr(0,filename.lastIndexOf(".")) + ".vtt",
-            "srtSub": videoDir + filename.substr(0,filename.lastIndexOf(".")) + ".srt"
+            "vttSub": "/" + staticDir + "/" + filename.substr(0,filename.lastIndexOf(".")) + ".vtt"
         };
     }
 

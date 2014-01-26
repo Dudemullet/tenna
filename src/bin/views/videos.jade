@@ -9,7 +9,7 @@ block content
         p #{videos[i].name}
         video(width="750px", controls="true", onclick="this.play()", preload="none")
             source(src="#{videos[i].stat}",type="video/mp4")
-            //- track(src="#{videos[i].sub}", kind="subtitle", srclang="en-US", label="English")
+            track(src="#{videos[i].vttSub}", kind="subtitle", srclang="en-US", label="English")
         a.btn.btn-success(href="#{videos[i].stat}") Download
     -}
     include blocks/nav
