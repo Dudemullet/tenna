@@ -3,21 +3,23 @@ var fs = require('fs');
 var escape = require('escape-html');
 var dirExp = require("node-dir");
 var express = require("express");
+var path = require("path");
 
 module.exports = function(app) {
     var 
         watchedDirs = ["./build/videos"],
         dirCollection = {},
         videoList = [],
-        supportedFileFormats = app.get("fileExtensions") || "mp4";
+        supportedFileFormats = app.get("fileExtensions") || "mp4",
+        PATHSEP = path.sep;
         
     var setStaticDirs = function() {
         watchedDirs.forEach(function(dir){
-            var parentDir = dir.substr(dir.lastIndexOf("/"));
+            var parentDir = dir.substr(dir.lastIndexOf(PATHSEP));
             parentDir = parentDir.replace(/ /g,'-')
                         .replace(/[^\w-]+/g,'');
 
-            app.use("/"+parentDir,express.static(dir));
+            app.use( PATHSEP +parentDir,express.static(dir));
         });
     }
     setStaticDirs();
@@ -50,15 +52,12 @@ module.exports = function(app) {
     var getMoviesInWatchedDirs = function(cb) {
         watchedDirs.forEach(function(dir){
 
-            var staticDir = dir.substr(dir.lastIndexOf("/"));
+            var staticDir = dir.substr(dir.lastIndexOf(PATHSEP));
 
             dirExp.files(dir,function(err,files){ if(err) console.log(err);
-                // Get dem mp4's
+                // Get files with supported file formats
                 var filteredVideos = files.filter(function(index){
                     var fileNameExtension = index.substr(index.lastIndexOf(".")+1);
-                    console.log("file: + " + index);
-                    console.log("EXT: + " + fileNameExtension);
-                    console.log("test: " + supportedFileFormats[fileNameExtension] || false);
                     return (supportedFileFormats[fileNameExtension] || false);
                 });
 
@@ -86,22 +85,22 @@ module.exports = function(app) {
     }
 
     var newVideo = function(val, staticDir) {
-        var filename = val.substr(val.lastIndexOf("/")+1);
-        var folderKey = val.substr(0,val.lastIndexOf("/"));
+        var filename = val.substr(val.lastIndexOf(PATHSEP)+1);
+        var folderKey = val.substr(0,val.lastIndexOf(PATHSEP));
         
         var strLen = staticDir.length;
         var staticDirPath = val.substr(val.indexOf(staticDir)+strLen);
         staticDir = staticDir.replace(/ /g,'-')
                     .replace(/[^\w-]+/g,'');
         return {
-            "stat": "/"+ staticDir + staticDirPath,
+            "stat": "/" + staticDir + staticDirPath,
             "dir": folderKey,
-            "parentDir":folderKey.substr(folderKey.lastIndexOf("/")),
-            "fileName": filename,
+            "parentDir":folderKey.substr(folderKey.lastIndexOf(PATHSEP)),
+            "fileName": filename, //includes extension
             "path": escape(val),
-            "name": filename.substr(0,filename.lastIndexOf(".")),
-            "vttSub": videoDir + filename.substr(0,filename.lastIndexOf(".")) + ".vtt",
-            "srtSub": videoDir + filename.substr(0,filename.lastIndexOf(".")) + ".srt"
+            "name": filename.substr(0,filename.lastIndexOf(".")), // No extension ie .mp4
+            "vttSub": folderKey + filename.substr(0,filename.lastIndexOf(".")) + ".vtt",
+            "srtSub": folderKey + filename.substr(0,filename.lastIndexOf(".")) + ".srt"
         };
     }
 
