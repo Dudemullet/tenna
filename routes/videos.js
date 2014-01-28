@@ -54,7 +54,7 @@ module.exports = function(app) {
         watchedDirs.forEach(function(dir){
 
             var staticDir = dir.substr(dir.lastIndexOf(PATHSEP));
-            
+
             //Recursively get all files in dir
             dirExp.files(dir,function(err,files) { if(err) console.log(err);
                 // Get supported files with valid extensions (mp4, avi, etc...)
