@@ -4,21 +4,23 @@ var fs = require('fs'),
     escape = require('escape-html'),
     dirExp = require("node-dir"),
     express = require("express");
+    path = require("path");
 
 module.exports = function(app) {
     var 
         watchedDirs = ["./build/videos"],
         dirCollection = {},
         videoList = [],
-        supportedFileFormats = app.get("fileExtensions") || "mp4";
+        supportedFileFormats = app.get("fileExtensions") || "mp4",
+        PATHSEP = path.sep;
         
     var setStaticDirs = function() {
         watchedDirs.forEach(function(dir){
-            var parentDir = dir.substr(dir.lastIndexOf("/"));
+            var parentDir = dir.substr(dir.lastIndexOf(PATHSEP));
             parentDir = parentDir.replace(/ /g,'-')
                         .replace(/[^\w-]+/g,'');
 
-            app.use("/"+parentDir,express.static(dir));
+            app.use( PATHSEP +parentDir,express.static(dir));
         });
     }
     setStaticDirs();
@@ -51,7 +53,7 @@ module.exports = function(app) {
     var getMoviesInWatchedDirs = function(cb) {
         watchedDirs.forEach(function(dir){
 
-            var staticDir = dir.substr(dir.lastIndexOf("/"));
+            var staticDir = dir.substr(dir.lastIndexOf(PATHSEP));
 
             //Recursively get all files in dir
             dirExp.files(dir,function(err,files) { if(err) console.log(err);
@@ -85,18 +87,18 @@ module.exports = function(app) {
     }
 
     var newVideo = function(val, staticDir) {
-        var filename = val.substr(val.lastIndexOf("/")+1);
-        var folderKey = val.substr(0,val.lastIndexOf("/"));
+        var filename = val.substr(val.lastIndexOf(PATHSEP)+1);
+        var folderKey = val.substr(0,val.lastIndexOf(PATHSEP));
         
         var strLen = staticDir.length;
         var staticDirPath = val.substr(val.indexOf(staticDir)+strLen);
         staticDir = staticDir.replace(/ /g,'-')
                     .replace(/[^\w-]+/g,'');
         return {
-            "stat": "/"+ staticDir + staticDirPath,
+            "stat": "/" + staticDir + staticDirPath,
             "dir": folderKey,
-            "parentDir":folderKey.substr(folderKey.lastIndexOf("/")),
-            "fileName": filename,
+            "parentDir":folderKey.substr(folderKey.lastIndexOf(PATHSEP)),
+            "fileName": filename, //includes extension
             "path": escape(val),
             "name": filename.substr(0,filename.lastIndexOf(".")),
             "vttSub": "/" + staticDir + "/" + filename.substr(0,filename.lastIndexOf(".")) + ".vtt"
