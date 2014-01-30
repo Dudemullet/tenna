@@ -17,6 +17,10 @@
     "grunt-contrib-watch": "*",
     "handbrake-js": "~0.1.6",
     "node-dir": "*",
-    "escape-html": "~1.0.1"
+    "escape-html": "~1.0.1",
+    "jquery-file-upload-middleware": "0.1.0"
+  },
+  "devDependencies": {
+    "grunt-contrib-coffee": "~0.8.2"
   }
 }

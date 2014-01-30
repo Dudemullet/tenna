@@ -5,7 +5,7 @@ var
     app = express(),
     fs = require('fs'),
     deployDir = "./build/",
-    config = require(deployDir + "config.json");
+    config = require(deployDir + "config.js");
 
 function arrToObj(arr){
     var a = {};
@@ -17,7 +17,7 @@ function arrToObj(arr){
 }
 
 app.set("port",config.port);
-app.set("fileExtensions", arrToObj(config.fileExtensions));
+app.set("fileExtensions", arrToObj( config.getSupportedExtensions()));
 
 var 
     port = app.get("port") || 8080,
@@ -25,6 +25,7 @@ var
     fileR = require('./routes/file_routes')(app),
     encoder = require('./routes/encode')(app),
     setup = require('./routes/setup')(app),
+    upload = require('./routes/upload')(app),
     os = require("os");
 
 app.configure(function () {

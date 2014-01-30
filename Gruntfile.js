@@ -32,19 +32,30 @@ module.exports = function(grunt) {
         },
         watch: {
             dev: {
-                files: ['src/less/**', 'src/bin/views/**', 'src/js/**',"src/bin/videos/**","src/bin/wallpapers/**"],
+                files: ['src/less/**', 'src/bin/views/**', 'src/js/**',"src/coffee/**","src/bin/config.js"],
                 tasks: [ 'default' ]
             }
+        },
+        coffee: {
+            glob_to_multiple: {
+                expand: true,
+                flatten: true,
+                cwd: 'src/coffee',
+                src: ['*.coffee'],
+                dest: 'build/js',
+                ext: '.js'
+            }
         }
-
     });
 
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-contrib-coffee');
 
-    grunt.registerTask('build', [ 'clean', 'copy','less' ]);
+    grunt.registerTask('compile', ['less','coffee']);
+    grunt.registerTask('build', [ 'clean', 'copy','compile']);
     grunt.registerTask('default', [ 'build' ]);
     grunt.registerTask('serve', [ 'server' ]);
 
