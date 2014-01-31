@@ -22,5 +22,8 @@
   },
   "devDependencies": {
     "grunt-contrib-coffee": "~0.8.2"
+  },
+  "scripts": {
+    "postinstall": "grunt"
   }
 }

@@ -7,8 +7,11 @@ module.exports = function(grunt) {
             options : {
                 force: true
             },
-            build: ['./build/'],
-            tmp: ['./tmp/']
+            all: [
+            'build/**/*',
+            '!build/videos/**',
+            '!build/wallpapers/**'
+            ]
         },
         copy: {
             assets: {
