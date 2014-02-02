@@ -8,20 +8,14 @@ var fs = require('fs'),
 
 module.exports = function(app) {
     var 
-        watchedDirs = ["./build/videos"],
+        watchedDirs = ["./build/videos/"],
         dirCollection = {},
         videoList = [],
-        supportedFileFormats = app.get("fileExtensions") || "mp4",
+        supportedFileFormats = app.get("movieExtensions") || "mp4",
         PATHSEP = path.sep;
         
     var setStaticDirs = function() {
-        watchedDirs.forEach(function(dir){
-            var parentDir = dir.substr(dir.lastIndexOf(PATHSEP));
-            parentDir = parentDir.replace(/ /g,'-')
-                        .replace(/[^\w-]+/g,'');
-
-            app.use( PATHSEP +parentDir,express.static(dir));
-        });
+        app.use( "/videos", express.static("./build/videos"));
     }
     setStaticDirs();
 
@@ -29,14 +23,11 @@ module.exports = function(app) {
         Routes
     */
     app.get('/videos', function(req, res, next){
-
         if(videoList.length <= 0){
-
             getMoviesInWatchedDirs(function(err){
                 res.render("videos",{"videos":videoList});
             });
         }
-
         res.render("videos",{"videos":videoList});
     });
 
@@ -95,13 +86,12 @@ module.exports = function(app) {
         staticDir = staticDir.replace(/ /g,'-')
                     .replace(/[^\w-]+/g,'');
         return {
-            "stat": "/" + staticDir + staticDirPath,
+            "stat": "/videos/" + filename,
             "dir": folderKey,
-            "parentDir":folderKey.substr(folderKey.lastIndexOf(PATHSEP)),
             "fileName": filename, //includes extension
             "path": escape(val),
             "name": filename.substr(0,filename.lastIndexOf(".")),
-            "vttSub": "/" + staticDir + "/" + filename.substr(0,filename.lastIndexOf(".")) + ".vtt"
+            "vttSub": PATHSEP + filename.substr(0,filename.lastIndexOf(".")) + ".vtt"
         };
     }
 
