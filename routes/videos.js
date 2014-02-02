@@ -8,27 +8,22 @@ var fs = require('fs'),
 
 module.exports = function(app) {
     var 
-        watchedDirs = ["./build/videos/"],
+        movieDir = app.get("movieDir"),
         dirCollection = {},
         videoList = [],
         supportedFileFormats = app.get("movieExtensions") || "mp4",
         PATHSEP = path.sep;
         
-    var setStaticDirs = function() {
-        app.use( "/videos", express.static("./build/videos"));
-    }
-    setStaticDirs();
+    app.use( "/videos", express.static("./build/videos"));
 
     /*
         Routes
     */
     app.get('/videos', function(req, res, next){
-        if(videoList.length <= 0){
-            getMoviesInWatchedDirs(function(err){
-                res.render("videos",{"videos":videoList});
-            });
-        }
-        res.render("videos",{"videos":videoList});
+        videoList = [];
+        getMoviesInWatchedDirs(function(err){
+            res.render("videos",{"videos":videoList});
+        });
     });
 
     app.get('/get/videos', function(req, res, next){
@@ -38,25 +33,19 @@ module.exports = function(app) {
         res.json(dirCollection);
     });
 
-    /*
-        Methods
-    */
     var getMoviesInWatchedDirs = function(cb) {
-        watchedDirs.forEach(function(dir){
+        //Recursively get all files in dir
+        dirExp.files(movieDir, function(err,files) { if(err) console.log(err);
+            // Get supported files with valid extensions (mp4, avi, etc...)
+            var filteredVideos = files.filter(validExtensionsFilter);
 
-            var staticDir = dir.substr(dir.lastIndexOf(PATHSEP));
-
-            //Recursively get all files in dir
-            dirExp.files(dir,function(err,files) { if(err) console.log(err);
-                // Get supported files with valid extensions (mp4, avi, etc...)
-                var filteredVideos = files.filter(validExtensionsFilter);
-
-                //Per video, construct a useful video object
-                filteredVideos.forEach(function(val,i,arr){
-                    addVideoToCollection( newVideo(val, staticDir) );
-                });
+            //Per video, construct a useful video object
+            filteredVideos.forEach(function(val,i,arr){
+                addVideoToCollection( newVideo(val, movieDir) );
             });
-        })
+
+            cb(videoList);
+        });
     }
 
     var validExtensionsFilter = function(index) {
@@ -91,7 +80,7 @@ module.exports = function(app) {
             "fileName": filename, //includes extension
             "path": escape(val),
             "name": filename.substr(0,filename.lastIndexOf(".")),
-            "vttSub": PATHSEP + filename.substr(0,filename.lastIndexOf(".")) + ".vtt"
+            "vttSub": "/videos/" + filename.substr(0,filename.lastIndexOf(".")) + ".vtt"
         };
     }
 

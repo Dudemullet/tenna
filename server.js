@@ -20,8 +20,8 @@ app.set("port",config.port);
 app.set("supportedExtensions", arrToObj(config.getSupportedExtensions()));
 app.set("fileExtensions", arrToObj(config.fileExtensions));
 app.set("movieExtensions", arrToObj(config.movieExtensions));
-app.set("movieDir", config.movieDir);
-app.set("fileDir", config.fileDir);
+app.set("movieDir", deployDir + config.movieDir);
+app.set("fileDir", deployDir + config.fileDir);
 
 var 
     port = app.get("port") || 8080,

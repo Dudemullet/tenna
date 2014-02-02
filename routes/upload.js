@@ -7,8 +7,8 @@ module.exports = function(app) {
   var 
     movieExtensions = app.get("movieExtensions"),
     fileExtensions = app.get("fileExtensions"),
-    movieDir = "./build/" + app.get("movieDir"),
-    fileDir = "./build/" + app.get("fileDir");
+    movieDir = app.get("movieDir"),
+    fileDir = app.get("fileDir");
   
   upload.configure({
     tmpDir: os.tmpdir(),
