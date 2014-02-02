@@ -3,7 +3,7 @@ html(lang='en')
     head
         include blocks/meta
         block vars
-        title= (title?title:locals.title)
+        title=(title?title:locals.title)
 
     body(class=locals.page ? 'page-' + locals.page + (locals.page === 'index' ? '' : ' page-secondary') : '')
         .container
