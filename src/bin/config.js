@@ -3,7 +3,9 @@
 module.exports = 
     (function () {return {
         "movieExtensions": ["mp4","avi"],
-        "fileExtensons": ["jpeg","jpg","png"] ,
+        "fileExtensions": ["jpeg","jpg","png"] ,
+        "movieDir": "videos",
+        "fileDir": "wallpapers",
         "getSupportedExtensions" : function() { return this.movieExtensions.concat(this.fileExtensons);},
         "port":"8081"
     }})();
