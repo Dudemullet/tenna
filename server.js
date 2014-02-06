@@ -25,11 +25,11 @@ app.set("fileDir", deployDir + config.fileDir);
 
 var 
     port = app.get("port") || 8080,
-    videoR = require('./routes/videos')(app),
-    fileR = require('./routes/file_routes')(app),
+    video = require('./routes/videos')(app),
+    file = require('./routes/file_routes')(app),
+    upload = require('./routes/upload')(app),
     encoder = require('./routes/encode')(app),
     setup = require('./routes/setup')(app),
-    upload = require('./routes/upload')(app),
     os = require("os");
 
 app.configure(function () {
@@ -41,7 +41,6 @@ app.configure(function () {
     app.use(express.methodOverride());
     app.use(express.json());
     app.use(express.urlencoded());
-    app.use(express.responseTime());
 
     // use the router
     app.use(app.router);
@@ -60,10 +59,10 @@ console.log('Get to app at http://' + os.hostname() + ":" + port);
 
 // Routes
 app.get('/', function (req, res, next) {
-    videoR.getMovies(function(files){
+    video.getMovies(function(files){
         var videos = files;
 
-        fileR.getFiles(function(foundFiles){
+        file.getFiles(function(foundFiles){
             var out = {
                 "videos":videos.slice(0,10),
                 "files":foundFiles.files.slice(0,10)

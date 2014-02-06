@@ -60,7 +60,7 @@ module.exports = function(app) {
     }
 
     var getMovies = function(cb) {
-        return cb(videoList);
+        return getMoviesInWatchedDirs(cb);
     }
     var getMovieDirs = function(cb) {
         return cb(dirCollection);

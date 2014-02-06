@@ -2,7 +2,7 @@
 
 module.exports = 
     (function () {return {
-        "movieExtensions": ["mp4","avi"],
+        "movieExtensions": ["mp4","avi","vtt"],
         "fileExtensions": ["jpeg","jpg","png"] ,
         "movieDir": "videos",
         "fileDir": "wallpapers",

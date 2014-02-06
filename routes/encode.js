@@ -1,9 +1,9 @@
 "use strict";
-var handbrake = require("handbrake-js");
-var child_process = require("child_process");
+var 
+    handbrake = require("handbrake-js"),
+    child_process = require("child_process");
+
 module.exports = function(app){
-    
-    console.log(__dirname);
 
     var options = {
         input: "class.mp4",
