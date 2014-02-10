@@ -22,13 +22,15 @@ app.set("fileExtensions", arrToObj(config.fileExtensions));
 app.set("movieExtensions", arrToObj(config.movieExtensions));
 app.set("movieDir", deployDir + config.movieDir);
 app.set("fileDir", deployDir + config.fileDir);
+app.set("encodeDir", deployDir + config.encodeDir);
+app.set("uploadDir", deployDir + 'uploads');
 
 var 
     port = app.get("port") || 8080,
     video = require('./routes/videos')(app),
     file = require('./routes/file_routes')(app),
     upload = require('./routes/upload')(app),
-    encoder = require('./routes/encode')(app),
+    encoder = require('./routes/encode')(app,upload),
     setup = require('./routes/setup')(app),
     os = require("os");
 
