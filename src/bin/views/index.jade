@@ -9,7 +9,7 @@ block content
         each xar in videos
             .col-xs-12.col-sm-4.col-md-3
                 .tile.bg-15
-                    a.video-wrapper(href="/videos/watch#{xar.path}")
+                    a.video-wrapper(href="/videos/##{xar.name}")
                         span.glyphicon.glyphicon-play.action-icon
                     div.tile-footer.bg-16(title="#{xar.name}") #{xar.name}
 

@@ -6,11 +6,14 @@ block vars
 block content
     h1 Videos
     - for (var i in videos) {
-        p #{videos[i].name}
+        p(id='#{videos[i].name}') #{videos[i].name}
         video(width="750px", controls="true", onclick="this.play()", preload="none")
             source(src="#{videos[i].stat}",type="video/mp4")
             track(src="#{videos[i].vttSub}", kind="subtitle", srclang="en-US", label="English")
         a.btn.btn-success(href="#{videos[i].stat}") Download
     -}
     include blocks/nav
+
 block footer
+block scripts
+  script(type="text/javascript" src="/js/videos.js")
