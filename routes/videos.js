@@ -19,21 +19,21 @@ module.exports = function(app) {
     /*
         Routes
     */
-    app.get('/videos', function(req, res, next){
+    app.get('/videos', function(req, res, next) {
         videoList = [];
-        getMoviesInWatchedDirs(function(err){
+        getMovies(function(err){
             res.render("videos",{"videos":videoList});
         });
     });
 
-    app.get('/get/videos', function(req, res, next){
+    app.get('/get/videos', function(req, res, next) {
         if(!dirCollection){
-            getMoviesInWatchedDirs();
+            getMovies();
         }
         res.json(dirCollection);
     });
 
-    var getMoviesInWatchedDirs = function(cb) {
+    var getMovies = function(cb) {
         //Recursively get all files in dir
         dirExp.files(movieDir, function(err,files) { if(err) console.log(err);
             // Get supported files with valid extensions (mp4, avi, etc...)
@@ -43,7 +43,7 @@ module.exports = function(app) {
             filteredVideos.forEach(function(val,i,arr){
                 addVideoToCollection( newVideo(val, movieDir) );
             });
-
+            
             cb(videoList);
         });
     }
@@ -57,13 +57,6 @@ module.exports = function(app) {
         dirCollection[videoObj.dir] = dirCollection[videoObj.dir] || [];
         dirCollection[videoObj.dir].push(videoObj);
         videoList.push(videoObj);
-    }
-
-    var getMovies = function(cb) {
-        return getMoviesInWatchedDirs(cb);
-    }
-    var getMovieDirs = function(cb) {
-        return cb(dirCollection);
     }
 
     var newVideo = function(val, staticDir) {
@@ -85,7 +78,6 @@ module.exports = function(app) {
     }
 
     return {
-        "getMovies":getMovies,
-        "getMovieDirs":getMovieDirs
+        "getMovies":getMovies
     }
 }
