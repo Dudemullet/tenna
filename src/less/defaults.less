@@ -1,16 +1,28 @@
+@gutter: 30px;
+
 html,body {
     background:@background-color;
     color:@font-color;
 }
 
-.row > * {
-    padding-top: 15px;
-    padding-bottom: 15px;
+.row {
+    & > * {
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+
+    //iphone
+    @media (max-width: @screen-xs-max) {
+        .clearfix;
+        padding-left:  (@gutter / 2);
+        padding-right: (@gutter / 2);
+    }
 }
 
 .tile {
     border-radius: 0;
     padding: 0;
+    background-color: @amethyst;
 
     .img-wrapper,
     .video-wrapper {
@@ -42,5 +54,6 @@ html,body {
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        background-color: @amethyst;
     }
 }
