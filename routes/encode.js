@@ -18,26 +18,34 @@ module.exports = function(app, upload){
     },
     movieExts = app.get("movieExtensions") || ["mp4"];
 
-  upload.on("end",function(fileInfo) { 
-    console.info("File added to encode dir: \n\t%s", fileInfo.name);
-    
+  upload.on("end",function(fileInfo) {
     var 
       filename = fileInfo.name,
-      fileExt = filename.substr(filename.lastIndexOf(".")+1),
-      fname_noExt = filename.substr(0,filename.lastIndexOf(".")),
-      fileOut = encodeDir + '/' + fname_noExt + '.mp4',
-      fm = upload.fileManager({
-        uploadDir: function() {
-          return encodeDir;
-        }
-      });
+      fileExt = filename.substr(filename.lastIndexOf(".")+1);
 
     if(!movieExts[fileExt]) {
-      console.info("Unsupported encode file: %s", filename);
+      console.info("Unsupported file upload: %s", filename); //Delete ?
       return;
     }
     
-    fileEncodeOptions.input = encodeDir + '/' + fileInfo.name;
+    fileInfo.nameNoExt = filename.substr(0,filename.lastIndexOf("."));
+    fileInfo.fileOut = encodeDir + '/' + fileInfo.nameNoExt + '.mp4';
+    fileInfo.dir = encodeDir;
+
+    encodeUploadedMovie(fileInfo);
+  });
+
+  var encodeUploadedMovie = function(fileInfo) {
+    var
+      filename = fileInfo.name,
+      fileOut = fileInfo.fileOut,
+      fm = upload.fileManager({
+        uploadDir: function() {
+          return fileInfo.dir;
+        }
+      });
+
+    fileEncodeOptions.input = fileInfo.dir + '/' + fileInfo.name;
     fileEncodeOptions.output = fileOut;
 
     handbrake.spawn(fileEncodeOptions)
@@ -50,11 +58,23 @@ module.exports = function(app, upload){
       console.log(progress);
     })
     .on("complete", function(params){ 
-      console.log("FINISH encoding for: \n\t%s", fname_noExt);
+      console.log("FINISH encoding for: \n\t%s", fileInfo.nameNoExt);
       fm.move(fileOut, "../videos", function(err){ 
           if(err)
               console.log(err);
       });
     });
+  }
+
+  app.use("/test", function(){
+    var 
+      fileInfo = {
+        "name": './souls.mp4',
+        "fileOut": './lol.mp4',
+        "nameNoExt": 'souls',
+        "dir": './'
+      };
+
+    encodeUploadedMovie(fileInfo);
   });
 }
