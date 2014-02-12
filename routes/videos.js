@@ -25,7 +25,9 @@ module.exports = function(app) {
     });
 
     app.get('/get/videos', function(req, res, next) {
-        getMovies(res.json);
+        getMovies(function(videoList){
+            res.json(videoList)
+        });
     });
 
     var getMovies = function(cb) {
