@@ -15,13 +15,14 @@
     "grunt-contrib-copy": "*",
     "grunt-contrib-less": "*",
     "grunt-contrib-watch": "*",
-    "handbrake-js": "~0.1.6",
+    "handbrake-js": "Dudemullet/handbrake-js",
     "node-dir": "*",
     "escape-html": "~1.0.1",
     "jquery-file-upload-middleware": ">=0.1.0"
   },
   "devDependencies": {
-    "grunt-contrib-coffee": "~0.8.2"
+    "grunt-contrib-coffee": "~0.8.2",
+    "winston": "~0.7.2"
   },
   "scripts": {
     "postinstall": "grunt"
