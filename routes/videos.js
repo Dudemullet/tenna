@@ -10,8 +10,7 @@ module.exports = function(app) {
     var 
         movieDir = app.get("movieDir"),
         dirCollection = {},
-        videoList = [],
-        supportedFileFormats = app.get("movieExtensions") || "mp4",
+        supportedFileFormats = app.get("movieExtensions") || ["mp4"],
         PATHSEP = path.sep;
         
     app.use( "/videos", express.static("./build/videos"));
@@ -20,20 +19,18 @@ module.exports = function(app) {
         Routes
     */
     app.get('/videos', function(req, res, next) {
-        videoList = [];
-        getMovies(function(err){
+        getMovies(function(videoList){
             res.render("videos",{"videos":videoList});
         });
     });
 
     app.get('/get/videos', function(req, res, next) {
-        if(!dirCollection){
-            getMovies();
-        }
-        res.json(dirCollection);
+        getMovies(res.json);
     });
 
     var getMovies = function(cb) {
+        var videoList = [];
+        
         //Recursively get all files in dir
         dirExp.files(movieDir, function(err,files) { if(err) console.log(err);
             // Get supported files with valid extensions (mp4, avi, etc...)
@@ -41,7 +38,7 @@ module.exports = function(app) {
 
             //Per video, construct a useful video object
             filteredVideos.forEach(function(val,i,arr){
-                addVideoToCollection( newVideo(val, movieDir) );
+                videoList.push(newVideo(val, movieDir));
             });
             
             cb(videoList);
@@ -51,12 +48,6 @@ module.exports = function(app) {
     var validExtensionsFilter = function(index) {
         var fileNameExtension = index.substr(index.lastIndexOf(".")+1);
         return (supportedFileFormats[fileNameExtension] || false);
-    }
-
-    var addVideoToCollection = function(videoObj) {
-        dirCollection[videoObj.dir] = dirCollection[videoObj.dir] || [];
-        dirCollection[videoObj.dir].push(videoObj);
-        videoList.push(videoObj);
     }
 
     var newVideo = function(val, staticDir) {
