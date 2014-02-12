@@ -1,7 +1,8 @@
 "use strict";
 var 
   upload = require('jquery-file-upload-middleware'),
-  fs = require('fs');
+  fs = require('fs'),
+  os = require('os');
 
 module.exports = function(app) {
   var 
@@ -12,6 +13,7 @@ module.exports = function(app) {
     uploadDir = app.get('uploadDir');
   
   upload.configure({
+    tmpDir: os.tmpDir(),
     uploadDir: uploadDir,
     uploadUrl: '/upload'
   });

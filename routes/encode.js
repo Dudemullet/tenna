@@ -15,13 +15,15 @@ module.exports = function(app, upload){
       vb:"2500",
       quality:"20",
       "crop":"0:0:0:0"
-    };
+    },
+    movieExts = app.get("movieExtensions") || ["mp4"];
 
   upload.on("end",function(fileInfo) { 
     console.info("File added to encode dir: \n\t%s", fileInfo.name);
     
     var 
       filename = fileInfo.name,
+      fileExt = filename.substr(filename.lastIndexOf(".")+1),
       fname_noExt = filename.substr(0,filename.lastIndexOf(".")),
       fileOut = encodeDir + '/' + fname_noExt + '.mp4',
       fm = upload.fileManager({
@@ -29,17 +31,23 @@ module.exports = function(app, upload){
           return encodeDir;
         }
       });
+
+    if(!movieExts[fileExt]) {
+      console.info("Unsupported encode file: %s", filename);
+      return;
+    }
     
     fileEncodeOptions.input = encodeDir + '/' + fileInfo.name;
     fileEncodeOptions.output = fileOut;
 
-    console.log("START Encoding for: \n\t%s", fname_noExt);
     handbrake.spawn(fileEncodeOptions)
     .on("error", function(err){
         console.log(err.message);
         console.log(err);
     })
+    .on("output", console.log)
     .on("progress", function(progress){
+      console.log(progress);
     })
     .on("complete", function(params){ 
       console.log("FINISH encoding for: \n\t%s", fname_noExt);
@@ -48,6 +56,5 @@ module.exports = function(app, upload){
               console.log(err);
       });
     });
-
   });
 }
