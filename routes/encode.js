@@ -16,7 +16,8 @@ module.exports = function(app, upload){
       quality:"20",
       "crop":"0:0:0:0"
     },
-    movieExts = app.get("movieExtensions") || ["mp4"];
+    movieExts = app.get("movieExtensions") || ["mp4"],
+    encodeQueue = {};
 
   upload.on("end",function(fileInfo) {
     var 
@@ -30,39 +31,43 @@ module.exports = function(app, upload){
     
     fileInfo.nameNoExt = filename.substr(0,filename.lastIndexOf("."));
     fileInfo.fileOut = encodeDir + '/' + fileInfo.nameNoExt + '.mp4';
-    fileInfo.dir = encodeDir;
 
     encodeUploadedMovie(fileInfo);
   });
 
   var encodeUploadedMovie = function(fileInfo) {
     var
-      filename = fileInfo.name,
-      fileOut = fileInfo.fileOut,
-      fm = upload.fileManager({
+      fm = upload.fileManager({ //TODO filemanager is being shared betwen this and upload.js that why we re-set it
         uploadDir: function() {
-          return fileInfo.dir;
+          return encodeDir;
         }
-      });
+      })
+      fileEncodeOptions.input = encodeDir + '/' + fileInfo.name,
+      fileEncodeOptions.output = fileInfo.fileOut,
+      encodeQueue[fileInfo.fileOut] = {},
+      handHandle = handbrake.spawn(fileEncodeOptions);
 
-    fileEncodeOptions.input = fileInfo.dir + '/' + fileInfo.name;
-    fileEncodeOptions.output = fileOut;
-
-    handbrake.spawn(fileEncodeOptions)
-    .on("error", function(err){
-        console.log(err.message);
-        console.log(err);
-    })
-    .on("output", console.log)
-    .on("progress", function(progress){
-      console.log(progress);
-    })
-    .on("complete", function(params){ 
+    handHandle.on("complete", function(params){ 
       console.log("FINISH encoding for: \n\t%s", fileInfo.nameNoExt);
-      fm.move(fileOut, "../videos", function(err){ 
+      fm.move(fileInfo.fileOut, "../videos", function(err){ 
           if(err)
               console.log(err);
       });
+      delete encodeQueue[fileInfo.fileOut];
+    })
+
+    setupEndpoint(handle, fileInfo.fileOut);
+  }
+
+  var setupEndpoint = function(handle, filename) {
+    handle.on("error", function(err){
+        console.log(err.message);
+        delete encodeQueue[filename];
+    })
+    .on("output", console.log)
+    .on("progress", function(progress){
+      encodeQueue[filename].eta = progress.eta;
+      encodeQueue[filename].complete = progress.percentComplete;
     });
   }
 
@@ -78,4 +83,16 @@ module.exports = function(app, upload){
     encodeUploadedMovie(fileInfo);
     res.send(200);
   });
+
+  app.get("encode/status/:filename", function(req, res, next) {
+    console.log("GET endpoint for: %s", req.params.filename);
+    var filename = req.params.filename;
+
+    if(!encodeQueue[req.params.filename]) {
+      res.status(400);
+    } else {
+      res.json(encodeQueue[filename])
+    }
+  });
+  
 }

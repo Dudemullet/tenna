@@ -61,16 +61,17 @@ console.log('Get to app at http://' + os.hostname() + ":" + port);
 
 // Routes
 app.get('/', function (req, res, next) {
-    video.getMovies(function(files){
-        var videos = files;
-
-        file.getFiles(function(foundFiles){
-            var out = {
-                "videos":videos.slice(0,10),
-                "files":foundFiles.files.slice(0,10)
-            };
+    video.getMovies(function(videos) {
+        video.getProcessing(function(processing) {
+            file.getFiles(function(foundFiles) {
+                var out = {
+                    "videos":videos.slice(0,10),
+                    "files":foundFiles.files.slice(0,10),
+                    "processing":processing
+                };
             res.render("index",out);
-        });
+            })
+        })
     })
 });
 

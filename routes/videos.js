@@ -9,6 +9,7 @@ var fs = require('fs'),
 module.exports = function(app) {
     var 
         movieDir = app.get("movieDir"),
+        encodeDir = app.get("encodeDir"),
         dirCollection = {},
         supportedFileFormats = app.get("movieExtensions") || ["mp4"],
         PATHSEP = path.sep;
@@ -20,7 +21,22 @@ module.exports = function(app) {
     */
     app.get('/videos', function(req, res, next) {
         getMovies(function(videoList){
-            res.render("videos",{"videos":videoList});
+            getProcessing(function(processingList){
+                
+                // console.log("VIDEOS: %d", videoList.length);
+                // videoList.forEach(function(obj){
+                //     console.log(obj)
+                // });
+                // console.log("PROCESSING: %d", processingList.length);
+                // processingList.forEach(function(obj){
+                //     console.log(obj)
+                // });
+
+                res.render("videos",{
+                    "videos": videoList,
+                    "processing": processingList
+                });
+            })
         });
     });
 
@@ -30,11 +46,40 @@ module.exports = function(app) {
         });
     });
 
-    var getMovies = function(cb) {
+    app.get('/get/processing', function(req, res, next) {
+        getProcessing(function(videoList){
+            res.json(videoList)
+        });
+    });
+    var getProcessing = function(cb) {
         var videoList = [];
         
         //Recursively get all files in dir
+        dirExp.files(encodeDir, function(err,files) { if(err) console.log(err);
+            if(!files)
+                return cb(videoList);
+
+            // Get supported files with valid extensions (mp4, avi, etc...)
+            var filteredVideos = files.filter(validExtensionsFilter);
+
+            //Per video, construct a useful video object
+            filteredVideos.forEach(function(val,i,arr){
+                var name = val.substr(val.lastIndexOf(PATHSEP)+1);
+                videoList.push({"name":name});
+            });
+            
+            return cb(videoList);
+        });
+    }
+
+    var getMovies = function(cb) {
+        var videoList = [];
+
+        //Recursively get all files in dir
         dirExp.files(movieDir, function(err,files) { if(err) console.log(err);
+            if(!files)
+                return cb(videoList);
+
             // Get supported files with valid extensions (mp4, avi, etc...)
             var filteredVideos = files.filter(validExtensionsFilter);
 
@@ -71,6 +116,7 @@ module.exports = function(app) {
     }
 
     return {
-        "getMovies":getMovies
+        "getMovies":getMovies,
+        "getProcessing":getProcessing
     }
 }

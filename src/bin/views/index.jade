@@ -4,23 +4,27 @@ block vars
     - var title = "PlayerTwo"
 
 block content
-    h2 Videos
-    .row
-        each xar in videos
-            .col-xs-12.col-sm-4.col-md-3
-                .tile.bg-15
-                    a.video-wrapper(href="/videos/##{xar.name}")
-                        span.glyphicon.glyphicon-play.action-icon
-                    div.tile-footer.bg-16(title="#{xar.name}") #{xar.name}
+  h2 Videos
+  .row
+    each xar in videos
+      .col-xs-12.col-sm-4.col-md-3
+        .tile
+          a.video-wrapper(href="/videos/##{xar.name}")
+            span.glyphicon.glyphicon-play.action-icon
+          div.tile-footer.bg-16(title="#{xar.name}") #{xar.name}
 
-    h2 Files
-    .row
-        each file in files
-            .col-xs-12.col-sm-4.col-md-3
-                .tile.bg-3
-                    a.img-wrapper(href="/dl#{file.path}")
-                        .bg-img(style="background-image:url('#{file.path}')")
-                        span.glyphicon.glyphicon-circle-arrow-down.action-icon
-                    div.tile-footer.bg-4(title="#{file.name}") #{file.name}
-
+  h2 Files
+  .row
+    each file in files
+      .col-xs-12.col-sm-4.col-md-3
+        .tile
+          a.img-wrapper(href="/dl#{file.path}")
+            .bg-img(style="background-image:url('#{file.path}')")
+            span.glyphicon.glyphicon-circle-arrow-down.action-icon
+          div.tile-footer.bg-4(title="#{file.name}") #{file.name}
+  - if(processing.length) {
+    h2 processing
+      each vid in processing
+        .processing-video
+  - }
 block footer
