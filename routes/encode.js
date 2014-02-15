@@ -69,13 +69,13 @@ module.exports = function(app, upload){
   app.use("/test", function(req, res, next){
     var 
       fileInfo = {
-        "name": './souls.mp4',
+        "name": './souls.avi',
         "fileOut": './lol.mp4',
         "nameNoExt": 'souls',
         "dir": './'
       };
 
     encodeUploadedMovie(fileInfo);
-    res.status(200);
+    res.send(200);
   });
 }
