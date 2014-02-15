@@ -15,7 +15,7 @@
     "grunt-contrib-copy": "*",
     "grunt-contrib-less": "*",
     "grunt-contrib-watch": "*",
-    "handbrake-js": "Dudemullet/handbrake-js",
+    "handbrake-js": "75lb/handbrake-js",
     "node-dir": "*",
     "escape-html": "~1.0.1",
     "jquery-file-upload-middleware": ">=0.1.0"
