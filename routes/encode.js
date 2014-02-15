@@ -66,7 +66,7 @@ module.exports = function(app, upload){
     });
   }
 
-  app.use("/test", function(){
+  app.use("/test", function(req, res, next){
     var 
       fileInfo = {
         "name": './souls.mp4',
@@ -76,5 +76,6 @@ module.exports = function(app, upload){
       };
 
     encodeUploadedMovie(fileInfo);
+    res.status(200);
   });
 }
