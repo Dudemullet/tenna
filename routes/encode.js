@@ -1,7 +1,8 @@
 "use strict";
 var 
   handbrake = require("handbrake-js"),
-  child_process = require("child_process");
+  child_process = require("child_process"),
+  util = require('util');
 
 module.exports = function(app, upload){
 
@@ -41,22 +42,26 @@ module.exports = function(app, upload){
         uploadDir: function() {
           return encodeDir;
         }
-      })
-      fileEncodeOptions.input = encodeDir + '/' + fileInfo.name,
-      fileEncodeOptions.output = fileInfo.fileOut,
-      encodeQueue[fileInfo.fileOut] = {},
-      handHandle = handbrake.spawn(fileEncodeOptions);
+      });
 
-    handHandle.on("complete", function(params){ 
+    fileEncodeOptions.input = encodeDir + '/' + fileInfo.name;
+    fileEncodeOptions.output = fileInfo.fileOut;
+    encodeQueue[fileInfo.name] = {};
+
+    //DEBUG
+    console.log("Adding file to encode QUEUE: %s", fileInfo.name);
+
+    var handle = handbrake.spawn(fileEncodeOptions)
+    .on("complete", function(params){ 
       console.log("FINISH encoding for: \n\t%s", fileInfo.nameNoExt);
       fm.move(fileInfo.fileOut, "../videos", function(err){ 
           if(err)
               console.log(err);
       });
-      delete encodeQueue[fileInfo.fileOut];
-    })
+      delete encodeQueue[fileInfo.name];
+    });
 
-    setupEndpoint(handle, fileInfo.fileOut);
+    setupEndpoint(handle, fileInfo.name);
   }
 
   var setupEndpoint = function(handle, filename) {
@@ -66,15 +71,20 @@ module.exports = function(app, upload){
     })
     .on("output", console.log)
     .on("progress", function(progress){
+
+      //DEBUG
+      console.log("PROGRESS - endpoint: %s", filename);
+
       encodeQueue[filename].eta = progress.eta;
       encodeQueue[filename].complete = progress.percentComplete;
     });
   }
 
+  //DEBUG 
   app.use("/test", function(req, res, next){
     var 
       fileInfo = {
-        "name": './souls.avi',
+        "name": 'souls.avi',
         "fileOut": './lol.mp4',
         "nameNoExt": 'souls',
         "dir": './'
@@ -84,15 +94,22 @@ module.exports = function(app, upload){
     res.send(200);
   });
 
-  app.get("encode/status/:filename", function(req, res, next) {
-    console.log("GET endpoint for: %s", req.params.filename);
+  app.get("/encode/status/:filename", function(req, res, next) {
+    /*  DEBUG
+    // console.log("GET endpoint for: %s", req.params.filename);
+    // encodeQueue["rofl"] = {
+    //   "complete" : (function(){return Math.random(0,1) * 100;})(),
+    //   "eta": "01h02m03s"
+    // }; */
+    console.log("Available props: \n" + util.inspect(encodeQueue));
+
     var filename = req.params.filename;
 
     if(!encodeQueue[req.params.filename]) {
-      res.status(400);
+      res.send(400);
     } else {
       res.json(encodeQueue[filename])
     }
   });
-  
+
 }
