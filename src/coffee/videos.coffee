@@ -1,8 +1,13 @@
 $(document).ready -> 
   target = window.location.hash
-  $target = $(target);
-  scrollConf = 
-    scrollTop: $target.offset().top
 
-  $('html, body').stop().animate(scrollConf, 500, 'swing', ->
-    window.location.hash = target)
+  scrollToVid = (video) ->
+    $video = $(video);
+    scrollConf = 
+      scrollTop: $video.offset().top
+
+    $('html, body').stop().animate(scrollConf, 500, 'swing', ->
+      window.location.hash = video)
+
+  if target
+    scrollToVid target
