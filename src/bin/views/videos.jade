@@ -12,16 +12,9 @@ block content
             track(src="#{videos[i].vttSub}", kind="subtitle", srclang="en-US", label="English")
         a.btn.btn-success(href="#{videos[i].stat}") Download
     -}
-    - if (processing.length) {
-        h1 Processing
-        - for (var i in videos) {
-            div(id= '#{videos[i].name}')
-        -}
-    - }    
     
     include blocks/nav
 
 block footer
 block scripts
-  script(type="text/javascript" src="/js/libs/watch.js")
   script(type="text/javascript" src="/js/videos.js")

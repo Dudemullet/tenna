@@ -21,22 +21,9 @@ module.exports = function(app) {
     */
     app.get('/videos', function(req, res, next) {
         getMovies(function(videoList){
-            getProcessing(function(processingList){
-                
-                // console.log("VIDEOS: %d", videoList.length);
-                // videoList.forEach(function(obj){
-                //     console.log(obj)
-                // });
-                // console.log("PROCESSING: %d", processingList.length);
-                // processingList.forEach(function(obj){
-                //     console.log(obj)
-                // });
-
-                res.render("videos",{
-                    "videos": videoList,
-                    "processing": processingList
-                });
-            })
+            res.render("videos",{
+                "videos": videoList
+            });
         });
     });
 
@@ -45,32 +32,6 @@ module.exports = function(app) {
             res.json(videoList)
         });
     });
-
-    app.get('/get/processing', function(req, res, next) {
-        getProcessing(function(videoList){
-            res.json(videoList)
-        });
-    });
-    var getProcessing = function(cb) {
-        var videoList = [];
-        
-        //Recursively get all files in dir
-        dirExp.files(encodeDir, function(err,files) { if(err) console.log(err);
-            if(!files)
-                return cb(videoList);
-
-            // Get supported files with valid extensions (mp4, avi, etc...)
-            var filteredVideos = files.filter(validExtensionsFilter);
-
-            //Per video, construct a useful video object
-            filteredVideos.forEach(function(val,i,arr){
-                var name = val.substr(val.lastIndexOf(PATHSEP)+1);
-                videoList.push({"name":name});
-            });
-            
-            return cb(videoList);
-        });
-    }
 
     var getMovies = function(cb) {
         var videoList = [];
@@ -116,7 +77,6 @@ module.exports = function(app) {
     }
 
     return {
-        "getMovies":getMovies,
-        "getProcessing":getProcessing
+        "getMovies":getMovies
     }
 }

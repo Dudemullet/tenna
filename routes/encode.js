@@ -2,7 +2,9 @@
 var 
   handbrake = require("handbrake-js"),
   child_process = require("child_process"),
-  util = require('util');
+  dirExp = require("node-dir"),
+  util = require('util'),
+  path = require("path");
 
 module.exports = function(app, upload){
 
@@ -18,7 +20,8 @@ module.exports = function(app, upload){
       "crop":"0:0:0:0"
     },
     movieExts = app.get("movieExtensions") || ["mp4"],
-    encodeQueue = {};
+    encodeQueue = {},
+    PATHSEP = path.sep;
 
   upload.on("end",function(fileInfo) {
     var 
@@ -80,6 +83,28 @@ module.exports = function(app, upload){
     });
   }
 
+  var getProcessing = function(cb) {
+    var videoList = [];
+    
+    //Recursively get all files in dir
+    dirExp.files(encodeDir, function(err,files) { if(err) console.log(err);
+      console.log("getProcessing: " + util.inspect(files));
+
+      if(!files)
+          return cb(videoList);
+
+      //Per video, construct a useful video object
+      files.forEach(function(val,i,arr){
+        var name = val.substr(val.lastIndexOf(PATHSEP)+1);
+        videoList.push({"name":name});
+      });
+      
+      console.log("videoList: \n\t" + util.inspect(videoList));
+      
+      return cb(videoList);
+    });
+  }
+
   //DEBUG 
   app.use("/test", function(req, res, next){
     var 
@@ -112,4 +137,21 @@ module.exports = function(app, upload){
     }
   });
 
+  app.get('/encode', function(req, res, next) {
+    console.log("GET: encode");
+    getProcessing(function(videoList) {
+      res.render("encode",{"processing":videoList});
+    });
+  });
+
+  app.get('/get/processing', function(req, res, next) {
+    console.log("GET processing videos JSON list");
+    getProcessing(function(videoList) {
+      res.json(videoList)
+    });
+  });
+
+  return {
+    "getProcessing": getProcessing
+  }
 }
