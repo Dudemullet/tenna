@@ -9,7 +9,8 @@ block content
     each vid in processing
       .col-xs-12.col-sm-4.col-md-3(id= "#{vid.name}")
         .tile
-          span.glyphicon.glyphicon-play.action-icon
+          .video-wrapper
+            span.glyphicon.glyphicon-random.action-icon
           div.tile-footer.bg-16(title="#{vid.name}") #{vid.name}
     
   include blocks/nav
