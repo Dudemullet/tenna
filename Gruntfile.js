@@ -16,12 +16,29 @@ module.exports = function(grunt) {
         copy: {
             assets: {
                 files: [
-                    { expand: true, cwd: 'src/', src: [ 'fonts/**' ], dest: 'build/' },
+                    { expand: true, cwd: 'src/bin/js/libs/flat-ui', src: [ 'fonts/**' ], dest: 'build/' },
                     { expand: true, flatten: true, cwd: 'src/css', src: [ '**' ], dest: 'build/css' },
                     { expand: true, flatten: false, cwd: 'src/bin', src: [ '**' ], dest: 'build/' },
                     { expand: true, flatten: false, cwd: 'src/', src: [ 'js/**' ], dest: 'build/' }
                 ]
             },
+            deps: {
+                files : [
+                    {cwd:"node_modules/", src:"flat-ui/**", dest:"src/bin/js/libs/", expand:true},
+                    {   
+                        cwd:"node_modules/blueimp-file-upload/js",
+                        src:"jquery.fileupload.js",
+                        dest:"build/js/libs/",
+                        expand:true
+                    },
+                    {   
+                        cwd:"node_modules/blueimp-file-upload/js/vendor",
+                        src:"jquery.ui.widget.js",
+                        dest:"build/js/libs/",
+                        expand:true
+                    },
+                ]
+            }
         },
         less: {
             dev: {
@@ -48,17 +65,20 @@ module.exports = function(grunt) {
                 dest: 'build/js',
                 ext: '.js'
             }
+        },
+        browserify : {
+            vendor: {
+                src: ['src/bin/js/app.js'],
+                dest: 'src/bin/js/vendor.js'
+            }
         }
     });
 
-    grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-contrib-copy');
-    grunt.loadNpmTasks('grunt-contrib-less');
-    grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-contrib-coffee');
+    require('matchdep').filter('grunt-*').forEach(grunt.loadNpmTasks);
+    require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
     grunt.registerTask('compile', ['less','coffee']);
-    grunt.registerTask('build', [ 'clean', 'copy','compile']);
+    grunt.registerTask('build', [ 'clean', 'copy:deps','browserify','copy:assets','compile']);
     grunt.registerTask('default', [ 'build' ]);
     grunt.registerTask('serve', [ 'server' ]);
 
