@@ -7,30 +7,27 @@ block content
   h2 Videos
   .row
     each xar in videos
-      .col-xs-12.col-sm-4.col-md-3
-        .tile
-          a.video-wrapper(href="/videos/##{xar.name}")
-            span.glyphicon.glyphicon-play.action-icon
-          div.tile-footer.bg-16(title="#{xar.name}") #{xar.name}
+      .tile.col-xs-12.col-sm-4.col-md-3
+        a.video-wrapper(href="/videos/##{xar.name}")
+          span.glyphicon.glyphicon-play.action-icon
+        div.tile-footer.bg-16(title="#{xar.name}") #{xar.name}
 
   h2 Files
   .row
     each file in files
-      .col-xs-12.col-sm-4.col-md-3
-        .tile
-          a.img-wrapper(href="/dl#{file.path}")
-            .bg-img(style="background-image:url('#{file.path}')")
-            span.glyphicon.glyphicon-circle-arrow-down.action-icon
-          div.tile-footer.bg-4(title="#{file.name}") #{file.name}
+      .tile.col-xs-12.col-sm-4.col-md-3
+        a.img-wrapper(href="/dl#{file.path}")
+          .bg-img(style="background-image:url('#{file.path}')")
+          span.glyphicon.glyphicon-circle-arrow-down.action-icon
+        div.tile-footer.bg-4(title="#{file.name}") #{file.name}
   - if(processing.length) {
     h1 Encoding
     .row
       each vid in processing
-        .col-xs-12.col-sm-4.col-md-3(id= "#{vid.name}")
-          .tile
-            .video-wrapper
-              span.glyphicon.glyphicon-random.action-icon
-            div.tile-footer.bg-16(title="#{vid.name}") #{vid.name}
+        .tile.col-xs-12.col-sm-4.col-md-3(data-vidname= "#{vid.name}")
+          .video-wrapper
+            span.glyphicon.glyphicon-random.action-icon
+          div.tile-footer.bg-16(title="#{vid.name}") #{vid.name}
   - }
 block footer
-  script(type="text/javascript" src="/js/main.js")
+  

@@ -105,7 +105,7 @@ module.exports = function(app, upload){
     });
   }
 
-  //DEBUG 
+  //DEBUG - send a static video to encoding
   app.use("/test", function(req, res, next){
     var 
       fileInfo = {
@@ -120,12 +120,13 @@ module.exports = function(app, upload){
   });
 
   app.get("/encode/status/:filename", function(req, res, next) {
-    /*  DEBUG
-    // console.log("GET endpoint for: %s", req.params.filename);
-    // encodeQueue["rofl"] = {
-    //   "complete" : (function(){return Math.random(0,1) * 100;})(),
-    //   "eta": "01h02m03s"
-    // }; */
+    // DEBUG
+    console.log("GET endpoint for: %s", req.params.filename);
+    encodeQueue["rofl"] = {
+      "complete" : (function(){return Math.random(0,1) * 100;})(),
+      "eta": "01h02m03s"
+    }; 
+
     console.log("Available props: \n" + util.inspect(encodeQueue));
 
     var filename = req.params.filename;

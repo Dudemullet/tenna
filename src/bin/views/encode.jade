@@ -7,8 +7,7 @@ block content
   h1 Encoding
   .row
     each vid in processing
-      .col-xs-12.col-sm-4.col-md-3(id= "#{vid.name}")
-        .tile
+      .tile.col-xs-12.col-sm-4.col-md-3(id= "#{vid.name}")
           .video-wrapper
             span.glyphicon.glyphicon-random.action-icon
           div.tile-footer.bg-16(title="#{vid.name}") #{vid.name}
@@ -16,4 +15,7 @@ block content
   include blocks/nav
 
 block footer
+
 block scripts
+  script(type="text/javascript" src="/js/libs/watch.js")
+  script(type="text/javascript" src="/js/encode.js")
