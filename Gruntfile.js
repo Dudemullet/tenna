@@ -8,9 +8,10 @@ module.exports = function(grunt) {
                 force: true
             },
             all: [
-            'build/**/*',
-            '!build/videos/**',
-            '!build/wallpapers/**'
+            'build/**/*', //Delete everything in build EXCEPT ->
+            '!build/videos/**', // User uploaded movies
+            '!build/wallpapers/**', // User uploaded files
+            '!build/bower_components/**' // Deps installed via bower
             ]
         },
         copy: {

@@ -1,0 +1,27 @@
+{
+  "name": "playertwo",
+  "version": "0.0.1",
+  "homepage": "https://github.com/Dudemullet/playertwo",
+  "authors": [
+    "Dudemullet <elpaip@gmail.com>"
+  ],
+  "description": "Playstation vita video streamer and fileshare",
+  "main": "./build/index.html",
+  "keywords": [
+    "vita",
+    "stream",
+    "video"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "vue": "~0.9.2"
+  }
+}
