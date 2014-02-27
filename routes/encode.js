@@ -95,8 +95,13 @@ module.exports = function(app, upload){
 
       //Per video, construct a useful video object
       files.forEach(function(val,i,arr){
-        var name = val.substr(val.lastIndexOf(PATHSEP)+1);
-        videoList.push({"name":name});
+        var 
+          filename = val.substr(val.lastIndexOf(PATHSEP)+1),
+          name = filename.substr(0,filename.lastIndexOf("."));
+        videoList.push({
+          "name": name,
+          "filename": filename
+        });
       });
       
       console.log("videoList: \n\t" + util.inspect(videoList));
@@ -119,24 +124,48 @@ module.exports = function(app, upload){
     res.send(200);
   });
 
-  app.get("/encode/status/:filename", function(req, res, next) {
-    // DEBUG
-    console.log("GET endpoint for: %s", req.params.filename);
-    encodeQueue["rofl"] = {
+  app.get("/encode/status/souls", function(req, res, next) {
+      res.json({
       "complete" : (function(){return Math.random(0,1) * 100;})(),
-      "eta": "01h02m03s"
-    }; 
-
-    console.log("Available props: \n" + util.inspect(encodeQueue));
-
-    var filename = req.params.filename;
-
-    if(!encodeQueue[req.params.filename]) {
-      res.send(400);
-    } else {
-      res.json(encodeQueue[filename])
-    }
+      "eta": "seltzer"
+      })
   });
+
+  app.get("/encode/status/mock", function(req, res, next) {
+      res.json({
+      "complete" : (function(){return Math.random(0,1) * 100;})(),
+      "eta": "mocker"
+      })
+  });
+
+  // app.get("/encode/status/:filename", function(req, res, next) {
+  //   if(!req.params.filename) {
+  //     res.send(400);
+  //     return;
+  //   }
+
+  //   // DEBUG
+  //   console.log("GET endpoint for: %s", req.params.filename);
+  //   encodeQueue["mock"] = {
+  //     "complete" : (function(){return Math.random(0,1) * 100;})(),
+  //     "eta": "01h02m03s"
+  //   };
+  //   encodeQueue["souls"] = {
+  //     "complete" : (function(){return Math.random(0,1) * 100;})(),
+  //     "eta": "01xx"
+  //   };
+
+  //   //DEBUG
+  //   console.log("Available props: \n" + util.inspect(encodeQueue));
+
+  //   var filename = req.params.filename;
+
+  //   if(!encodeQueue[req.params.filename]) {
+  //     res.send(404);
+  //   } else {
+  //     res.json(encodeQueue[filename])
+  //   }
+  // });
 
   app.get('/encode', function(req, res, next) {
     console.log("GET: encode");

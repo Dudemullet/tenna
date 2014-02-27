@@ -5,13 +5,15 @@ block vars
 
 block content
   h1 Encoding
-  .row
+  .row#vue-app
     each vid in processing
       .tile.col-xs-12.col-sm-4.col-md-3(id= "#{vid.name}")
           .video-wrapper
             span.glyphicon.glyphicon-random.action-icon
-          div.tile-footer.bg-16(title="#{vid.name}") #{vid.name}
-    
+          div.tile-footer.bg-16(title="#{vid.name}") 
+            span(v-text="eta") {{eta}} - 
+            span(v-text="complete")
+
   include blocks/nav
 
 block footer
