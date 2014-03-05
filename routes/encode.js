@@ -11,6 +11,7 @@ module.exports = function(app, upload){
   var 
     movieDir = app.get("movieDir"),
     encodeDir = app.get("encodeDir"),
+    uploadDir = app.get("uploadDir"),
     fileEncodeOptions = {
       encoder: "x264",
       "keep-display-aspect":true,
@@ -47,12 +48,12 @@ module.exports = function(app, upload){
         }
       });
 
-    fileEncodeOptions.input = encodeDir + '/' + fileInfo.name;
+    fileEncodeOptions.input = uploadDir + '/' + fileInfo.name;
     fileEncodeOptions.output = fileInfo.fileOut;
-    encodeQueue[fileInfo.name] = {};
+    encodeQueue[fileInfo.nameNoExt] = {};
 
     //DEBUG
-    console.log("Adding file to encode QUEUE: %s", fileInfo.name);
+    console.log("Adding file to encode QUEUE: %s", fileInfo.nameNoExt);
 
     var handle = handbrake.spawn(fileEncodeOptions)
     .on("complete", function(params){ 
@@ -61,10 +62,10 @@ module.exports = function(app, upload){
           if(err)
               console.log(err);
       });
-      delete encodeQueue[fileInfo.name];
+      delete encodeQueue[fileInfo.nameNoExt];
     });
 
-    setupEndpoint(handle, fileInfo.name);
+    setupEndpoint(handle, fileInfo.nameNoExt);
   }
 
   var setupEndpoint = function(handle, filename) {
@@ -111,41 +112,24 @@ module.exports = function(app, upload){
   }
 
   //DEBUG - send a static video to encoding
-  app.use("/test", function(req, res, next){
-    var 
-      fileInfo = {
-        "name": 'souls.avi',
-        "fileOut": './lol.mp4',
-        "nameNoExt": 'souls',
-        "dir": './'
-      };
+  // app.use("/encode/test", function(req, res, next){
+  //   var 
+  //     fileInfo = {
+  //       "name": 'souls.avi',
+  //       "fileOut": './lol.mp4',
+  //       "nameNoExt": 'souls',
+  //       "dir": './'
+  //     };
 
-    encodeUploadedMovie(fileInfo);
-    res.send(200);
-  });
-
-  app.get("/encode/status/souls", function(req, res, next) {
-      res.json({
-      "complete" : (function(){return Math.random(0,1) * 100;})(),
-      "eta": "seltzer"
-      })
-  });
-
-  app.get("/encode/status/mock", function(req, res, next) {
-      res.json({
-      "complete" : (function(){return Math.random(0,1) * 100;})(),
-      "eta": "mocker"
-      })
-  });
-
-  // app.get("/encode/status/:filename", function(req, res, next) {
-  //   if(!req.params.filename) {
-  //     res.send(400);
-  //     return;
-  //   }
-
-  //   // DEBUG
-  //   console.log("GET endpoint for: %s", req.params.filename);
+  //   encodeUploadedMovie(fileInfo);
+  //   res.send(200);
+  // });
+  // app.use("/encode/testFlush", function(req, res, next) {
+  //   encodeQueue = {};
+  //   console.log("Encode Queue flushed");
+  // })
+  // app.use("/encode/testInit", function(req, res, next) {
+  //   console.log("Encode Queue flushed");
   //   encodeQueue["mock"] = {
   //     "complete" : (function(){return Math.random(0,1) * 100;})(),
   //     "eta": "01h02m03s"
@@ -154,18 +138,30 @@ module.exports = function(app, upload){
   //     "complete" : (function(){return Math.random(0,1) * 100;})(),
   //     "eta": "01xx"
   //   };
-
-  //   //DEBUG
+  //   console.log("Test Queue created");
   //   console.log("Available props: \n" + util.inspect(encodeQueue));
 
-  //   var filename = req.params.filename;
+  //   res.send(200);
+  // })
 
-  //   if(!encodeQueue[req.params.filename]) {
-  //     res.send(404);
-  //   } else {
-  //     res.json(encodeQueue[filename])
-  //   }
-  // });
+  app.get("/encode/status/:filename", function(req, res, next) {
+    
+    if(!req.params.filename) { // Either video was finished encoding or never existed
+      res.send(400);
+      return;
+    }
+
+    // DEBUG
+    console.log("GET endpoint for: %s", req.params.filename);
+
+    var filename = req.params.filename;
+
+    if(!encodeQueue[req.params.filename]) {
+      res.send(404);
+    } else {
+      res.json(encodeQueue[filename])
+    }
+  });
 
   app.get('/encode', function(req, res, next) {
     console.log("GET: encode");

@@ -28,12 +28,7 @@ module.exports = function(app) {
         }
       });
 
-    if(movieExtensions[extension]) {
-      fm.move(fileinfo.name, "./../../" + encodeDir, function(err){ 
-        if(err)
-          console.log(err);
-      });
-    } else if(fileExtensions[extension]) {
+    if(fileExtensions[extension]) {
       fm.move(fileinfo.name, "./../../" + fileDir, function(err){ 
         if(err)
           console.log(err);
