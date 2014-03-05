@@ -4,7 +4,8 @@ var
   child_process = require("child_process"),
   dirExp = require("node-dir"),
   util = require('util'),
-  path = require("path");
+  path = require("path"),
+  fs = require("fs");
 
 module.exports = function(app, upload){
 
@@ -63,6 +64,10 @@ module.exports = function(app, upload){
               console.log(err);
       });
       delete encodeQueue[fileInfo.nameNoExt];
+      fs.unlink(fileEncodeOptions.input,function(err){
+        if(err)
+          console.log(err);
+      });
     });
 
     setupEndpoint(handle, fileInfo.nameNoExt);
