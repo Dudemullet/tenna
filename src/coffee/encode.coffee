@@ -21,7 +21,9 @@ vueconf =
         self.eta = res.eta
         self.complete = res.complete
       .done (res) ->
-        setTimeout self.getData(),200
+        setTimeout( ()->
+          self.getData()
+        ,300)
       .fail (res) ->
         if(res.status == 404)
           self.$destroy()

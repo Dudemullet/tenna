@@ -36,7 +36,9 @@ module.exports = function(app, upload){
     }
     
     fileInfo.nameNoExt = filename.substr(0,filename.lastIndexOf("."));
-    fileInfo.fileOut = encodeDir + '/' + fileInfo.nameNoExt + '.mp4';
+    var uniqueKey = "a" + Date.now();
+    fileInfo.fileOut = encodeDir + '/' + uniqueKey + '.mp4'; //Create unique file
+    fileInfo.uniqueKey = uniqueKey;
 
     encodeUploadedMovie(fileInfo);
   });
@@ -51,7 +53,7 @@ module.exports = function(app, upload){
 
     fileEncodeOptions.input = uploadDir + '/' + fileInfo.name;
     fileEncodeOptions.output = fileInfo.fileOut;
-    encodeQueue[fileInfo.nameNoExt] = {};
+    encodeQueue[fileInfo.uniqueKey] = {};
 
     //DEBUG
     console.log("Adding file to encode QUEUE: %s", fileInfo.nameNoExt);
@@ -59,33 +61,38 @@ module.exports = function(app, upload){
     var handle = handbrake.spawn(fileEncodeOptions)
     .on("complete", function(params){ 
       console.log("FINISH encoding for: \n\t%s", fileInfo.nameNoExt);
-      fm.move(fileInfo.fileOut, "../videos", function(err){ 
+      var setToOldName = encodeDir + "/" + fileInfo.nameNoExt + ".mp4";
+      
+      fs.rename(fileInfo.fileOut, setToOldName, function(){
+        fm.move(setToOldName, "../videos", function(err){ 
           if(err)
-              console.log(err);
-      });
-      delete encodeQueue[fileInfo.nameNoExt];
+            console.log(err);
+        });
+      })
+      delete encodeQueue[fileInfo.uniqueKey];
+      
       fs.unlink(fileEncodeOptions.input,function(err){
         if(err)
           console.log(err);
       });
     });
 
-    setupEndpoint(handle, fileInfo.nameNoExt);
+    setupEndpoint(handle, fileInfo.uniqueKey);
   }
 
-  var setupEndpoint = function(handle, filename) {
+  var setupEndpoint = function(handle, fileId) {
     handle.on("error", function(err){
         console.log(err.message);
-        delete encodeQueue[filename];
+        delete encodeQueue[fileId];
     })
     .on("output", console.log)
     .on("progress", function(progress){
 
       //DEBUG
-      console.log("PROGRESS - endpoint: %s", filename);
+      console.log("PROGRESS - endpoint: %s", fileId);
 
-      encodeQueue[filename].eta = progress.eta;
-      encodeQueue[filename].complete = progress.percentComplete;
+      encodeQueue[fileId].eta = progress.eta;
+      encodeQueue[fileId].complete = progress.percentComplete;
     });
   }
 
