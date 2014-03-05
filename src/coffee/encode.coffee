@@ -7,11 +7,7 @@ vueconf =
   ready : ->
     self = this
     self.videoname = self.$el.getAttribute("id")
-    self.intervalId = setInterval () ->
-      self.getData()
-    , 1000
-  beforeDestroy : ->
-    clearInterval(this.intervalId)
+    self.getData()
   computed : {
     amtComplete : {
       $get : ()->
@@ -24,9 +20,13 @@ vueconf =
       $.get "/encode/status/" + self.videoname , (res) ->
         self.eta = res.eta
         self.complete = res.complete
+      .done (res) ->
+        setTimeout self.getData(),200
       .fail (res) ->
         if(res.status == 404)
           self.$destroy()
+        else
+          setTimeout self.getData,1500
   }
   filters : {
     decimals : decimalFormatter
