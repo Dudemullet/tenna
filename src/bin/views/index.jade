@@ -5,13 +5,18 @@ block vars
 
 block content
   h2 Videos
+  - if(videos.length) {
   .row
     each xar in videos
       .tile.col-xs-12.col-sm-4.col-md-3
         a.video-wrapper(href="/videos/##{xar.name}")
           span.glyphicon.glyphicon-play.action-icon
         div.tile-footer.bg-16(title="#{xar.name}") #{xar.name}
-
+  - } else {
+  a(href="/setup")
+    h1 Add videos here
+  - }
+  - if(files.length) {
   h2 Files
   .row
     each file in files
@@ -20,6 +25,7 @@ block content
           .bg-img(style="background-image:url('#{file.path}')")
           span.glyphicon.glyphicon-circle-arrow-down.action-icon
         div.tile-footer.bg-4(title="#{file.name}") #{file.name}
+  - }
   - if(processing.length) {
     h1 Encoding
     .row
