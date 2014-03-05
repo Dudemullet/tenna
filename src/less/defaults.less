@@ -1,5 +1,3 @@
-@gutter: 30px;
-
 html,body {
     background:@background-color;
     color:@font-color;
@@ -22,27 +20,27 @@ html,body {
 .tile {
     border-radius: 0;
     background-color: transparent;
-    padding: 15px;
+    padding: @app-padding;
     
     .img-wrapper,
     .video-wrapper {
         position: relative;
         color:#FFF;
         display:block;
-        height:150px;
+        height: @tile-height;
         background-color: @amethyst;
 
         .action-icon {
-            @icon-font-size:70px;
+            @icon-font-size: (@tile-height / 2);
             position: absolute;
             font-size: @icon-font-size;
             left: 0;
             right: 0;
             margin: 0 auto;
-            top: (@icon-font-size / 2);
+            line-height: @tile-height;
         }
         .bg-img {
-            height:150px;
+            height: @tile-height;
             position: relative;
             overflow: hidden;
             background-position:50% 50%;
@@ -51,7 +49,7 @@ html,body {
     }
 
     .tile-footer {
-        padding: 14px;
+        padding: @app-padding;
         text-align: left;
         white-space: nowrap;
         overflow: hidden;
