@@ -1,26 +1,33 @@
 # Player two
-Vita sream is a node js application that lets you easily access files and video from any computer in the same network. This application is accessed via the browser so it may run well on any toaster with a browser.
-
-## Videos
-the only encoding supported on the vita is h.264. Luckily this is the most supported codec by browsers. videos will be hosted from:
-
-`<projectdir>/build/videos`
-
-## Files
-Files will be hosted from
-`<projectdir>/build/files`
+A node js application that lets you easily access files and video from any computer in the same network. This application is accessed via the browser so it may run well on any toaster with a browser.
 
 ## Setup
-clone this repository to your computer. In that directory.
+clone this repository to your computer. In that directory type in the following commands:
 
 ```
 npm install
+bower install
+node server
 ```
 
-Videos will be hosted from the `<projectdir>/build/videos` directory
+## Endpoints
 
-### Vita
-To access the app on the vita open your browser and type your computers hostname in the address bar
-`
-http://<myComputerName>:8080
-`
+### Adding Videos/Files
+Drag and drop videos or files at:
+
+`localhost:8081/setup`
+
+## Encode status
+While files are being encoded vie their status at:
+
+`localhost:8081/encode`
+
+### Watching Videos
+the only encoding supported on the vita is h.264. Luckily this is the most supported codec by browsers. videos will be hosted from:
+
+`localhost:8081/videos`
+
+### Downloading Files
+Files will be hosted from
+
+`localhost:8081/files`
