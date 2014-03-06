@@ -27,21 +27,36 @@ module.exports = function(app, upload){
 
   upload.on("end",function(fileInfo) {
     var 
-      filename = fileInfo.name,
-      fileExt = filename.substr(filename.lastIndexOf(".")+1);
+      vid = PendingVideo(fileInfo);
 
-    if(!movieExts[fileExt]) {
-      console.info("Unsupported file upload: %s", filename); //Delete ?
+    if(!movieExts[vid.extension]) {
+      console.info("Unsupported file upload: %s", vid.filename);
+      fs.unlink(vid.filename);
       return;
     }
-    
-    fileInfo.nameNoExt = filename.substr(0,filename.lastIndexOf("."));
-    var uniqueKey = "a" + Date.now();
-    fileInfo.fileOut = encodeDir + '/' + uniqueKey + '.mp4'; //Create unique file
-    fileInfo.uniqueKey = uniqueKey;
 
-    encodeUploadedMovie(fileInfo);
+    encodeUploadedMovie(vid);
   });
+
+  /*
+     Pending video
+
+    filename - filename (includes extension)
+    name - filename with no extension
+    uniqueKey - key to set the tmp filename to
+    extension - file extension ie. mp4, avi, etc...
+    tmpName - filename using
+  */
+  var PendingVideo = function (fileInfo) {
+    return {
+      filename : fileInfo.name,
+      name : fileInfo.name.substr(0,fileInfo.name.lastIndexOf(".")),
+      uniqueKey : "a" + Date.now(),
+      extension: fileInfo.name.substr(fileInfo.name.lastIndexOf(".")+1),
+      get tmpName() {return encodeDir + '/' + this.uniqueKey + '.mp4'},
+      get file() {return uploadDir + '/' + this.filename}
+    }
+  }
 
   var encodeUploadedMovie = function(fileInfo) {
     var
@@ -51,19 +66,19 @@ module.exports = function(app, upload){
         }
       });
 
-    fileEncodeOptions.input = uploadDir + '/' + fileInfo.name;
-    fileEncodeOptions.output = fileInfo.fileOut;
+    fileEncodeOptions.input = fileInfo.file;
+    fileEncodeOptions.output = fileInfo.tmpName;
     encodeQueue[fileInfo.uniqueKey] = {};
 
     //DEBUG
-    console.log("Adding file to encode QUEUE: %s", fileInfo.nameNoExt);
+    console.log("Adding file to encode QUEUE: %s", fileInfo.name);
 
     var handle = handbrake.spawn(fileEncodeOptions)
     .on("complete", function(params){ 
-      console.log("FINISH encoding for: \n\t%s", fileInfo.nameNoExt);
-      var setToOldName = encodeDir + "/" + fileInfo.nameNoExt + ".mp4";
+      console.log("FINISH encoding for: \n\t%s", fileInfo.name);
+      var setToOldName = encodeDir + "/" + fileInfo.name + ".mp4";
       
-      fs.rename(fileInfo.fileOut, setToOldName, function(){
+      fs.rename(fileInfo.tmpName, setToOldName, function(){
         fm.move(setToOldName, "../videos", function(err){ 
           if(err)
             console.log(err);
@@ -89,7 +104,7 @@ module.exports = function(app, upload){
     .on("progress", function(progress){
 
       //DEBUG
-      console.log("PROGRESS - endpoint: %s", fileId);
+      // console.log("PROGRESS - endpoint: %s", fileId);
 
       encodeQueue[fileId].eta = progress.eta;
       encodeQueue[fileId].complete = progress.percentComplete;
@@ -129,7 +144,7 @@ module.exports = function(app, upload){
   //     fileInfo = {
   //       "name": 'souls.avi',
   //       "fileOut": './lol.mp4',
-  //       "nameNoExt": 'souls',
+  //       "name": 'souls',
   //       "dir": './'
   //     };
 
