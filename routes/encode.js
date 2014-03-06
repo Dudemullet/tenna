@@ -35,7 +35,10 @@ module.exports = function(app, upload){
       return;
     }
 
-    encodeUploadedMovie(vid);
+    fileEncodeOptions.input = vid.file;
+    fileEncodeOptions.output = vid.tmpName;
+
+    encodeUploadedMovie(vid, fileEncodeOptions);
   });
 
   /*
@@ -58,7 +61,7 @@ module.exports = function(app, upload){
     }
   }
 
-  var encodeUploadedMovie = function(fileInfo) {
+  var encodeUploadedMovie = function(fileInfo, encOptions) {
     var
       fm = upload.fileManager({ //TODO filemanager is being shared betwen this and upload.js that why we re-set it
         uploadDir: function() {
@@ -66,15 +69,11 @@ module.exports = function(app, upload){
         }
       });
 
-    fileEncodeOptions.input = fileInfo.file;
-    fileEncodeOptions.output = fileInfo.tmpName;
-    encodeQueue[fileInfo.uniqueKey] = {};
-
     //DEBUG
     console.log("Adding file to encode QUEUE: %s", fileInfo.name);
 
-    var handle = handbrake.spawn(fileEncodeOptions)
-    .on("complete", function(params){ 
+    var handle = handbrake.spawn(encOptions)
+    .on("complete", function(params) {
       console.log("FINISH encoding for: \n\t%s", fileInfo.name);
       var setToOldName = encodeDir + "/" + fileInfo.name + ".mp4";
       
@@ -86,7 +85,7 @@ module.exports = function(app, upload){
       })
       delete encodeQueue[fileInfo.uniqueKey];
       
-      fs.unlink(fileEncodeOptions.input,function(err){
+      fs.unlink(fileInfo.file,function(err){
         if(err)
           console.log(err);
       });
@@ -96,16 +95,14 @@ module.exports = function(app, upload){
   }
 
   var setupEndpoint = function(handle, fileId) {
+    encodeQueue[fileId] = {};
+
     handle.on("error", function(err){
         console.log(err.message);
         delete encodeQueue[fileId];
     })
     .on("output", console.log)
     .on("progress", function(progress){
-
-      //DEBUG
-      // console.log("PROGRESS - endpoint: %s", fileId);
-
       encodeQueue[fileId].eta = progress.eta;
       encodeQueue[fileId].complete = progress.percentComplete;
     });
