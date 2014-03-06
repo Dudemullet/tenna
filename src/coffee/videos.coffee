@@ -11,3 +11,6 @@ $(document).ready ->
 
   if target
     scrollToVid target
+
+  $(".row").on "click","video", (evt)->
+    evt.target.play()

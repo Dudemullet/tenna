@@ -5,13 +5,18 @@ block vars
 
 block content
     h1 Videos
-    - for (var i in videos) {
-        p(id='#{videos[i].name}') #{videos[i].name}
-        video(width="750px", controls="true", onclick="this.play()", preload="none")
-            source(src="#{videos[i].stat}",type="video/mp4")
-            track(src="#{videos[i].vttSub}", kind="subtitle", srclang="en-US", label="English")
-        a.btn.btn-success(href="#{videos[i].stat}") Download
-    -}
+    .row
+        - for (var i in videos) {
+            .tile.col-xs-12.col-sm-4.col-md-3(id='#{videos[i].name}')
+                .video-wrapper
+                    span.glyphicon.glyphicon-play.action-icon
+                    video(preload="none")
+                        source(src="#{videos[i].stat}",type="video/mp4")
+                        track(src="#{videos[i].vttSub}", kind="subtitle", srclang="en-US", label="English")
+                .tile-footer.bg-16(title="#{videos[i].name}") #{videos[i].name}
+                    a(href="#{videos[i].stat}")
+                        i.glyphicon.glyphicon-circle-arrow-down
+        -}
     
     include blocks/nav
 
