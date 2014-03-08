@@ -14,7 +14,7 @@ block content
                         source(src="#{videos[i].stat}",type="video/mp4")
                         track(src="#{videos[i].vttSub}", kind="subtitle", srclang="en-US", label="English")
                 .tile-footer.bg-16(title="#{videos[i].name}") #{videos[i].name}
-                    a(href="#{videos[i].stat}")
+                    a.action-icon(href="#{videos[i].stat}")
                         i.glyphicon.glyphicon-circle-arrow-down
         -}
     
