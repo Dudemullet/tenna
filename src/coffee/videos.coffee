@@ -12,5 +12,6 @@ $(document).ready ->
   if target
     scrollToVid target
 
-  $(".row").on "click","video", (evt)->
-    evt.target.play()
+  $(".row").on "click",".tile", (evt)->
+    tile = this
+    $(tile).find("video")[0].play()
