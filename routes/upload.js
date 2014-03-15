@@ -6,10 +6,8 @@ var
 
 module.exports = function(app) {
   var 
-    movieExtensions = app.get("movieExtensions"),
     fileExtensions = app.get("fileExtensions"),
     fileDir = app.get("fileDir"),
-    encodeDir = app.get("encodeDir"),
     uploadDir = app.get('uploadDir');
   
   upload.configure({
@@ -33,8 +31,6 @@ module.exports = function(app) {
         if(err)
           console.log(err);
       });
-    } else { //Unknown extension uploaded
-      console.log("Uknown extension uploaded: %j", fileinfo);
     }
   };
 

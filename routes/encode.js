@@ -95,8 +95,8 @@ module.exports = function(app, upload){
         console.log(err.message);
         delete encodeQueue[fileId];
     })
-    .on("output", console.log)
     .on("progress", function(progress){
+      console.log("P2 - progress " + progress.percentComplete + " ETA: " + progress.eta);
       encodeQueue[fileId].eta = progress.eta;
       encodeQueue[fileId].complete = progress.percentComplete;
     });
@@ -129,39 +129,6 @@ module.exports = function(app, upload){
     });
   }
 
-  //DEBUG - send a static video to encoding
-  // app.use("/encode/test", function(req, res, next){
-  //   var 
-  //     fileInfo = {
-  //       "name": 'souls.avi',
-  //       "fileOut": './lol.mp4',
-  //       "name": 'souls',
-  //       "dir": './'
-  //     };
-
-  //   encodeUploadedMovie(fileInfo);
-  //   res.send(200);
-  // });
-  // app.use("/encode/testFlush", function(req, res, next) {
-  //   encodeQueue = {};
-  //   console.log("Encode Queue flushed");
-  // })
-  // app.use("/encode/testInit", function(req, res, next) {
-  //   console.log("Encode Queue flushed");
-  //   encodeQueue["mock"] = {
-  //     "complete" : (function(){return Math.random(0,1) * 100;})(),
-  //     "eta": "01h02m03s"
-  //   };
-  //   encodeQueue["souls"] = {
-  //     "complete" : (function(){return Math.random(0,1) * 100;})(),
-  //     "eta": "01xx"
-  //   };
-  //   console.log("Test Queue created");
-  //   console.log("Available props: \n" + util.inspect(encodeQueue));
-
-  //   res.send(200);
-  // })
-
   app.get("/encode/status/:filename", function(req, res, next) {
     
     if(!req.params.filename) { // Either video was finished encoding or never existed
@@ -169,8 +136,8 @@ module.exports = function(app, upload){
       return;
     }
 
-    // DEBUG
-    console.log("GET endpoint for: %s", req.params.filename);
+    // TODO: add to debug log
+    // console.log("GET endpoint for: %s", req.params.filename); //Add to debug log
 
     var filename = req.params.filename;
 
