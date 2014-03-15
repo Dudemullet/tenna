@@ -29,12 +29,6 @@ module.exports = function(app, upload){
     var 
       vid = PendingVideo(fileInfo);
 
-    if(!movieExts[vid.extension]) {
-      console.info("Unsupported file upload: %s", vid.filename);
-      fs.unlink(vid.filename);
-      return;
-    }
-
     fileEncodeOptions.input = vid.file;
     fileEncodeOptions.output = vid.tmpName;
 
