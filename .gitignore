@@ -5,3 +5,6 @@ src/bin/videos/
 src/bin/js/libs/flat-ui/
 src/bin/js/vendor.js
 *.mp4
+*.avi
+*.mkv
+*.mov
