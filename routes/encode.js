@@ -1,59 +1,60 @@
 "use strict";
 var 
   handbrake = require("handbrake-js"),
-  child_process = require("child_process"),
   dirExp = require("node-dir"),
   util = require('util'),
   path = require("path"),
   fs = require("fs");
 
-module.exports = function(app, upload){
+var
+  fileEncodeOptions = {
+    encoder: "x264",
+    "keep-display-aspect":true,
+    modulus:16,
+    vb:"2500",
+    quality:"20",
+    "crop":"0:0:0:0"
+  },
+  movieExt = ".mp4",
+  encodeQueue = {},
+  PATHSEP = path.sep;
 
-  var 
-    movieDir = app.get("movieDir"),
+module.exports = function(app, upload) {
+  var
     encodeDir = app.get("encodeDir"),
-    uploadDir = app.get("uploadDir"),
-    fileEncodeOptions = {
-      encoder: "x264",
-      "keep-display-aspect":true,
-      modulus:16,
-      vb:"2500",
-      quality:"20",
-      "crop":"0:0:0:0"
-    },
-    movieExts = app.get("movieExtensions") || ["mp4"],
-    encodeQueue = {},
-    PATHSEP = path.sep;
+    uploadDir = app.get("uploadDir");
 
-  upload.on("end",function(fileInfo) {
-    var 
-      vid = PendingVideo(fileInfo);
-
-    fileEncodeOptions.input = vid.file;
-    fileEncodeOptions.output = vid.tmpName;
-
-    encodeUploadedMovie(vid, fileEncodeOptions);
-  });
-
-  /*
-     Pending video
+  /** Pending video
 
     filename - filename (includes extension)
     name - filename with no extension
     uniqueKey - key to set the tmp filename to
     extension - file extension ie. mp4, avi, etc...
-    tmpName - filename using
-  */
+    tmpName - filename using */
   var PendingVideo = function (fileInfo) {
-    return {
+    var retObj = {
       filename : fileInfo.name,
       name : fileInfo.name.substr(0,fileInfo.name.lastIndexOf(".")),
       uniqueKey : "a" + Date.now(),
       extension: fileInfo.name.substr(fileInfo.name.lastIndexOf(".")+1),
-      get tmpName() {return encodeDir + '/' + this.uniqueKey + '.mp4'},
-      get file() {return uploadDir + '/' + this.filename}
-    }
+      get tmpName() {return encodeDir + '/' + this.uniqueKey + movieExt},
+    };
+
+    if(typeof uploadDir !== 'undefined')
+      retObj.uploadDirFile = uploadDir + '/' + retObj.filename;
+
+    return retObj;
   }
+
+  upload.on("end",function(fileInfo) {
+    var 
+      vid = PendingVideo(fileInfo);
+
+    fileEncodeOptions.input = vid.uploadDirFile;
+    fileEncodeOptions.output = vid.tmpName;
+
+    encodeUploadedMovie(vid, fileEncodeOptions);
+  });
 
   var encodeUploadedMovie = function(fileInfo, encOptions) {
     var
@@ -69,7 +70,7 @@ module.exports = function(app, upload){
     var handle = handbrake.spawn(encOptions)
     .on("complete", function(params) {
       console.log("FINISH encoding for: \n\t%s", fileInfo.name);
-      var setToOldName = encodeDir + "/" + fileInfo.name + ".mp4";
+      var setToOldName = encodeDir + "/" + fileInfo.name + movieExt;
       
       fs.rename(fileInfo.tmpName, setToOldName, function(){
         fm.move(setToOldName, "../videos", function(err){ 
@@ -79,7 +80,7 @@ module.exports = function(app, upload){
       })
       delete encodeQueue[fileInfo.uniqueKey];
       
-      fs.unlink(fileInfo.file,function(err){
+      fs.unlink(fileInfo.uploadDirFile,function(err){
         if(err)
           console.log(err);
       });
@@ -102,6 +103,9 @@ module.exports = function(app, upload){
     });
   }
 
+  /*
+    Get a list of the videos currently being encoded
+  */
   var getProcessing = function(cb) {
     var videoList = [];
     
