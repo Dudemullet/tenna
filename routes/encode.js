@@ -1,4 +1,5 @@
 "use strict";
+
 var 
   handbrake = require("handbrake-js"),
   dirExp = require("node-dir"),
@@ -20,8 +21,9 @@ var
   PATHSEP = path.sep;
 
 module.exports = function(app, upload) {
-  var
+  var // App level variables
     encodeDir = app.get("encodeDir"),
+    videoDir = app.get("movieDir"),
     uploadDir = app.get("uploadDir");
 
   /** Pending video
@@ -57,36 +59,36 @@ module.exports = function(app, upload) {
   });
 
   var encodeUploadedMovie = function(fileInfo, encOptions) {
-    var
-      fm = upload.fileManager({ //TODO filemanager is being shared betwen this and upload.js that why we re-set it
-        uploadDir: function() {
-          return encodeDir;
-        }
-      });
-
     //DEBUG
     console.log("Adding file to encode QUEUE: %s", fileInfo.name);
 
     var handle = handbrake.spawn(encOptions)
     .on("complete", function(params) {
       console.log("FINISH encoding for: \n\t%s", fileInfo.name);
-      var setToOldName = encodeDir + "/" + fileInfo.name + movieExt;
-      
-      fs.rename(fileInfo.tmpName, setToOldName, function(){
-        fm.move(setToOldName, "../videos", function(err){ 
-          if(err)
-            console.log(err);
-        });
-      })
-      delete encodeQueue[fileInfo.uniqueKey];
-      
-      fs.unlink(fileInfo.uploadDirFile,function(err){
-        if(err)
-          console.log(err);
-      });
+      encodeComplete(fileInfo)
     });
 
     setupEndpoint(handle, fileInfo.uniqueKey);
+  }
+
+  var encodeComplete = function(fileInfo) {
+    var endName = videoDir + "/" + fileInfo.name + movieExt;
+    
+    console.log("Moving encoded file to dir: " + endName);
+    // move to video dir
+    fs.rename(fileInfo.tmpName, endName, function(err) {
+      if(err)
+        console.log(err);
+    })
+
+    //remove from encode  queue
+    delete encodeQueue[fileInfo.uniqueKey];
+    
+    //remove from upload dir
+    fs.unlink(fileInfo.uploadDirFile,function(err){
+      if(err)
+        console.log(err);
+    });
   }
 
   var setupEndpoint = function(handle, fileId) {
