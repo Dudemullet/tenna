@@ -7,24 +7,80 @@ var
   path = require("path"),
   fs = require("fs");
 
-var
-  fileEncodeOptions = {
-    encoder: "x264",
-    "keep-display-aspect":true,
-    modulus:16,
-    vb:"2500",
-    quality:"20",
-    "crop":"0:0:0:0"
-  },
-  movieExt = ".mp4",
-  encodeQueue = {},
-  PATHSEP = path.sep;
-
 module.exports = function(app, upload) {
   var // App level variables
-    encodeDir = app.get("encodeDir"),
-    videoDir = app.get("movieDir"),
-    uploadDir = app.get("uploadDir");
+    // encodeDir = app.get("encodeDir") || "./build/encode",
+    // videoDir = app.get("movieDir") || "./build/videos",
+    // uploadDir = app.get("uploadDir") || "./build/encode",
+
+    // Module variables
+    fileEncodeOptions = {
+      encoder: "x264",
+      "keep-display-aspect":true,
+      modulus:16,
+      vb:"2500",
+      quality:"20",
+      "crop":"0:0:0:0"},
+    movieExt = ".mp4",
+    encodeQueue = {},
+    PATHSEP = path.sep;
+
+  if(arguments.length == 2) {
+    serverConfig()
+  } else {
+    // cli init
+    console.log('console init');
+  }
+
+  var serverConfig = function(app, upload) {
+    
+    upload.on("end", uploadFinished);
+
+    var setupRoutes = function(app) {
+      app.get("/encode/status/:filename", function(req, res, next) {
+      
+        if(!req.params.filename) { // Either video was finished encoding or never existed
+          res.send(400);
+          return;
+        }
+
+        // TODO: add to debug log
+        // console.log("GET endpoint for: %s", req.params.filename); //Add to debug log
+
+        var filename = req.params.filename;
+
+        if(!encodeQueue[req.params.filename]) {
+          res.send(404);
+        } else {
+          res.json(encodeQueue[filename])
+        }
+      });
+
+      app.get('/encode', function(req, res, next) {
+        console.log("GET: encode");
+        getProcessing(function(videoList) {
+          res.render("encode",{"processing":videoList});
+        });
+      });
+
+      app.get('/get/processing', function(req, res, next) {
+        console.log("GET processing videos JSON list");
+        getProcessing(function(videoList) {
+          res.json(videoList)
+        });
+      });  
+    }
+  }
+
+  var uploadFinished = function(fileInfo) {
+    var 
+      vid = PendingVideo(fileInfo);
+
+    fileEncodeOptions.input = vid.uploadDirFile;
+    fileEncodeOptions.output = vid.tmpName;
+
+    encodeUploadedMovie(vid, fileEncodeOptions);
+  }
 
   /** Pending video
 
@@ -47,16 +103,6 @@ module.exports = function(app, upload) {
 
     return retObj;
   }
-
-  upload.on("end",function(fileInfo) {
-    var 
-      vid = PendingVideo(fileInfo);
-
-    fileEncodeOptions.input = vid.uploadDirFile;
-    fileEncodeOptions.output = vid.tmpName;
-
-    encodeUploadedMovie(vid, fileEncodeOptions);
-  });
 
   var encodeUploadedMovie = function(fileInfo, encOptions) {
     //DEBUG
@@ -134,40 +180,6 @@ module.exports = function(app, upload) {
       return cb(videoList);
     });
   }
-
-  app.get("/encode/status/:filename", function(req, res, next) {
-    
-    if(!req.params.filename) { // Either video was finished encoding or never existed
-      res.send(400);
-      return;
-    }
-
-    // TODO: add to debug log
-    // console.log("GET endpoint for: %s", req.params.filename); //Add to debug log
-
-    var filename = req.params.filename;
-
-    if(!encodeQueue[req.params.filename]) {
-      res.send(404);
-    } else {
-      res.json(encodeQueue[filename])
-    }
-  });
-
-  app.get('/encode', function(req, res, next) {
-    console.log("GET: encode");
-    getProcessing(function(videoList) {
-      res.render("encode",{"processing":videoList});
-    });
-  });
-
-  app.get('/get/processing', function(req, res, next) {
-    console.log("GET processing videos JSON list");
-    getProcessing(function(videoList) {
-      res.json(videoList)
-    });
-  });
-
   return {
     "getProcessing": getProcessing
   }
