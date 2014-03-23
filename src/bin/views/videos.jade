@@ -7,12 +7,16 @@ block content
     h1 Videos
     .row
         - for (var i in videos) {
-            .tile.col-xs-12.col-sm-4.col-md-3(id='#{videos[i].name}')
+            .tile.col-xs-12.col-sm-12.col-md-12(id='#{videos[i].name}')
                 .video-wrapper
                     span.glyphicon.glyphicon-play.action-icon
                     video(preload="none")
-                        source(src="#{videos[i].stat}",type="video/mp4")
+                        source(src="#{videos[i].stat}", type="video/mp4")
                         track(src="#{videos[i].vttSub}", kind="subtitle", srclang="en-US", label="English")
+                        object(type="application/x-shockwave-flash", data="player.swf")
+                            param(name="allowfullscreen" value="true")
+                            param(name="allowscriptaccess", value="always")
+                            param(name="flashvars",value="file=#{videos[i].stat}")
                 .tile-footer.bg-16(title="#{videos[i].name}") #{videos[i].name}
                     a.action-icon(href="#{videos[i].stat}")
                         i.glyphicon.glyphicon-circle-arrow-down
@@ -22,4 +26,5 @@ block content
 
 block footer
 block scripts
-  script(type="text/javascript" src="/js/videos.js")
+    script(type="text/javascript" src="/bower_components/fitvids/jquery.fitvids.js")
+    script(type="text/javascript" src="/js/videos.js")

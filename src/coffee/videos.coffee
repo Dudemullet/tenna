@@ -15,3 +15,5 @@ $(document).ready ->
   $(".row").on "click",".tile", (evt)->
     tile = this
     $(tile).find("video")[0].play()
+
+  $(".video-wrapper").fitVids()
