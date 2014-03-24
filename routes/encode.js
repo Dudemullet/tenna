@@ -12,6 +12,9 @@ module.exports = function(app, upload) {
     // encodeDir = app.get("encodeDir") || "./build/encode",
     // videoDir = app.get("movieDir") || "./build/videos",
     // uploadDir = app.get("uploadDir") || "./build/encode",
+    encodeDir = "./build/encode",
+    videoDir = "./build/videos",
+    uploadDir = "./build/encode",
 
     // Module variables
     fileEncodeOptions = {
@@ -24,13 +27,6 @@ module.exports = function(app, upload) {
     movieExt = ".mp4",
     encodeQueue = {},
     PATHSEP = path.sep;
-
-  if(arguments.length == 2) {
-    serverConfig()
-  } else {
-    // cli init
-    console.log('console init');
-  }
 
   var serverConfig = function(app, upload) {
     
@@ -180,7 +176,23 @@ module.exports = function(app, upload) {
       return cb(videoList);
     });
   }
-  return {
-    "getProcessing": getProcessing
+
+  if(arguments.length == 2) {
+    serverConfig()
+    return {"getProcessing": getProcessing};
+  } else {
+    // cli init
+    console.log('console init');
+
+    var encodeVid = function(file, out) {
+      fileEncodeOptions.input = file;
+      fileEncodeOptions.output = out;
+
+      return handbrake.spawn(fileEncodeOptions)
+    }
+
+    return {
+      encode:encodeVid
+    };
   }
 }
