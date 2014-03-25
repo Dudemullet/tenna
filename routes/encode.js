@@ -178,7 +178,7 @@ module.exports = function(app, upload) {
   }
 
   if(arguments.length == 2) {
-    serverConfig()
+    serverConfig(app, upload);
     return {"getProcessing": getProcessing};
   } else {
     // cli init
