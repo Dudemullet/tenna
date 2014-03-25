@@ -8,9 +8,12 @@ var
   fs = require('fs');
 
 var
-  bar = new progress('encoding :bar :percent :elapseds elapsed', 10),
+  bar = new progress('encoding title [:bar] :percent Elapsed: :elapseds ETA: :estimate', 
+    {
+      total:25
+    }),
   video = "jellies.mp4",
-  outputDir = "lol.mp4",
+  outputDir = ".mp4",
   handle = encoder.encode(video, outputDir);
 
 var hostVideo = function() {
@@ -40,7 +43,6 @@ var hostVideo = function() {
   app.set("encodeDir", deployDir + config.encodeDir);
   app.set("uploadDir", deployDir + 'uploads');
 
-
   app.configure(function () {
     app.set('view engine', 'jade');
     app.set('views', deployDir + 'views');
@@ -64,19 +66,23 @@ var hostVideo = function() {
   });
 
   var video = require('./routes/videos')(app);
-
-
   app.listen(8080);
 }
 
-handle.on("progress", function(progress){
-    console.log("P2 - progress " + progress.percentComplete + " ETA: " + progress.eta);
-  }).on("complete", function(params){
-    console.log("completed");
+handle
+  .on("progress", function(progress){
+    var
+      eta = progress.eta<=0?"calculating...":progress.eta,
+      percentRatio = progress.percentComplete/100;
+
+    bar.update(percentRatio,{estimate:eta});
+  })
+  .on("complete", function(params){
+    bar.terminate();
+    console.log("Encode complete");
     fs.rename("lol.mp4","build/videos/lol.mp4",function(err){
       if(err)
         console.log(err);
-      console.log("move complete");
       hostVideo();
     });
-  })
+  })  
