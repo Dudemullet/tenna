@@ -5,16 +5,14 @@ var
   progress = require('progress'),
   util = require('util'),
   encoder = require('./routes/encode')(),
-  fs = require('fs');
+  fs = require('fs'),
+  path = require('path'),
+  argv = require('minimist')(process.argv.slice(2));
 
 var
-  bar = new progress('encoding title [:bar] :percent Elapsed: :elapseds ETA: :estimate', 
-    {
-      total:25
-    }),
-  video = "jellies.mp4",
-  outputDir = ".mp4",
-  handle = encoder.encode(video, outputDir);
+  barConfStr = 'encoding :title [:bar] :percent Elapsed: :elapseds ETA: :estimate',
+  bar = new progress(barConfStr, {total:25});
+  
 
 var hostVideo = function() {
   var 
@@ -69,20 +67,46 @@ var hostVideo = function() {
   app.listen(8080);
 }
 
-handle
-  .on("progress", function(progress){
-    var
-      eta = progress.eta<=0?"calculating...":progress.eta,
-      percentRatio = progress.percentComplete/100;
+var encodeVideo = function(file, outFile) {
+  
+  var
+    handle = encoder.encode(file, outFile);
+  
+  handle
+    .on("progress", function(progress){
+      updateBar(progress, file);
+    })
+    .on("complete", function(params){
+      encodeComplete(params, outFile);
+    })
+}
 
-    bar.update(percentRatio,{estimate:eta});
-  })
-  .on("complete", function(params){
-    bar.terminate();
-    console.log("Encode complete");
-    fs.rename("lol.mp4","build/videos/lol.mp4",function(err){
-      if(err)
-        console.log(err);
-      hostVideo();
-    });
-  })  
+var updateBar = function(progress, filename) {
+  var
+    eta = progress.eta<=0?"calculating...":progress.eta,
+    percentRatio = progress.percentComplete/100;
+
+    bar.update(percentRatio,{"estimate":eta,"title":filename});
+}
+
+var encodeComplete =  function(params, outFile) {
+  bar.terminate();
+  console.log("Encode complete");
+  fs.rename(outFile,"build/videos/" + outFile,function(err){
+    if(err)
+      console.log(err);
+    hostVideo();
+  });
+}
+
+// init
+if(argv._.length <= 0) {
+  hostVideo();
+} else {
+  var
+    filename = path.normalize(argv._[0]),
+    ext = path.extname(filename),
+    base = path.basename(filename, ext);
+  
+  encodeVideo(filename, base + ".mp4");
+}
