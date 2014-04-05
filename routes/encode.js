@@ -29,43 +29,41 @@ module.exports = function(app, upload) {
     PATHSEP = path.sep;
 
   var serverConfig = function(app, upload) {
-    
+    uploadDir = "./build/uploads";
     upload.on("end", uploadFinished);
+    setupRoutes(app);
+  }
 
-    var setupRoutes = function(app) {
-      app.get("/encode/status/:filename", function(req, res, next) {
-      
-        if(!req.params.filename) { // Either video was finished encoding or never existed
-          res.send(400);
-          return;
-        }
+  var setupRoutes = function(app) {
+    app.get("/encode/status/:filename", function(req, res, next) {
+    
+      if(!req.params.filename) { // Either video was finished encoding or never existed
+        res.send(400);
+        return;
+      }
 
-        // TODO: add to debug log
-        // console.log("GET endpoint for: %s", req.params.filename); //Add to debug log
+      var filename = req.params.filename;
 
-        var filename = req.params.filename;
+      if(!encodeQueue[req.params.filename]) {
+        res.send(404);
+      } else {
+        res.json(encodeQueue[filename])
+      }
+    });
 
-        if(!encodeQueue[req.params.filename]) {
-          res.send(404);
-        } else {
-          res.json(encodeQueue[filename])
-        }
+    app.get('/encode', function(req, res, next) {
+      console.log("GET: encode");
+      getProcessing(function(videoList) {
+        res.render("encode",{"processing":videoList});
       });
+    });
 
-      app.get('/encode', function(req, res, next) {
-        console.log("GET: encode");
-        getProcessing(function(videoList) {
-          res.render("encode",{"processing":videoList});
-        });
+    app.get('/get/processing', function(req, res, next) {
+      console.log("GET processing videos JSON list");
+      getProcessing(function(videoList) {
+        res.json(videoList)
       });
-
-      app.get('/get/processing', function(req, res, next) {
-        console.log("GET processing videos JSON list");
-        getProcessing(function(videoList) {
-          res.json(videoList)
-        });
-      });  
-    }
+    });  
   }
 
   var uploadFinished = function(fileInfo) {
@@ -103,6 +101,8 @@ module.exports = function(app, upload) {
   var encodeUploadedMovie = function(fileInfo, encOptions) {
     //DEBUG
     console.log("Adding file to encode QUEUE: %s", fileInfo.name);
+    console.log("encOptions", encOptions);
+    console.log("fileInfo", fileInfo);
 
     var handle = handbrake.spawn(encOptions)
     .on("complete", function(params) {
@@ -183,7 +183,7 @@ module.exports = function(app, upload) {
   } else {
     // cli init
     console.log('console init');
-
+    uploadDir = "./build/encode";
     var encodeVid = function(file, out) {
       fileEncodeOptions.input = file;
       fileEncodeOptions.output = out;
