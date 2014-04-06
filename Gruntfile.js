@@ -86,7 +86,7 @@ module.exports = function(grunt) {
     require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
     grunt.registerTask('compile', ['less','coffee']);
-    grunt.registerTask('build', [ 'clean', 'copy:deps','browserify','copy:assets','compile']);
+    grunt.registerTask('build', [ 'clean', 'copy:deps','browserify','copy:assets','mkdir:assets','compile']);
     grunt.registerTask('default', [ 'build' ]);
     grunt.registerTask('serve', [ 'server' ]);
 
