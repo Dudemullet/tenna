@@ -41,6 +41,13 @@ module.exports = function(grunt) {
                 ]
             }
         },
+        mkdir: {
+            assets: {
+                options: {
+                    create: ['build/wallpapers', 'build/videos', 'build/encode']
+                }
+            }
+        }, 
         less: {
             dev: {
                 options: {
