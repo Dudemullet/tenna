@@ -76,28 +76,6 @@ module.exports = function(app, upload) {
     encodeUploadedMovie(vid, fileEncodeOptions);
   }
 
-  /** Pending video
-
-    filename - filename (includes extension)
-    name - filename with no extension
-    uniqueKey - key to set the tmp filename to
-    extension - file extension ie. mp4, avi, etc...
-    tmpName - filename using */
-  var PendingVideo = function (fileInfo) {
-    var retObj = {
-      filename : fileInfo.name,
-      name : fileInfo.name.substr(0,fileInfo.name.lastIndexOf(".")),
-      uniqueKey : "a" + Date.now(),
-      extension: fileInfo.name.substr(fileInfo.name.lastIndexOf(".")+1),
-      get tmpName() {return encodeDir + '/' + this.uniqueKey + movieExt},
-    };
-
-    if(typeof uploadDir !== 'undefined')
-      retObj.uploadDirFile = uploadDir + '/' + retObj.filename;
-
-    return retObj;
-  }
-
   var encodeUploadedMovie = function(fileInfo, encOptions) {
     //DEBUG
     console.log("Adding file to encode QUEUE: %s", fileInfo.name);
@@ -176,6 +154,38 @@ module.exports = function(app, upload) {
       return cb(videoList);
     });
   }
+
+  /** Pending video
+
+  filename - filename (includes extension)
+  name - filename with no extension
+  uniqueKey - key to set the tmp filename to
+  extension - file extension ie. mp4, avi, etc...
+  tmpName - filename using */
+  function PendingVideo(fileInfo) {
+    if(!(this instanceof PendingVideo))
+      return new PendingVideo(fileInfo);
+    
+    this.filename = fileInfo.name;
+    this.uniqueKey = "a" + Date.now();
+  };
+
+  PendingVideo.prototype = {
+    get tmpName(){
+      return encodeDir + '/' + this.uniqueKey + movieExt
+    },
+    get extension() {
+      return path.extname(this.filename);
+    },
+    get name() {
+      return path.basename(this.filename,this.extension);
+    },
+    get uploadDirFile() {
+      if(typeof uploadDir === 'undefined')
+        uploadDir == '';
+      return uploadDir + '/' + this.filename;
+    }
+  };
 
   if(arguments.length == 2) {
     serverConfig(app, upload);

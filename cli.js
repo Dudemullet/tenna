@@ -14,7 +14,7 @@ var
   bar = new progress(barConfStr, {total:25});
   
 
-var hostVideo = function() {
+var startServer = function() {
   var
     server = require('./server.js');
 }
@@ -47,13 +47,13 @@ var encodeComplete =  function(params, outFile) {
   fs.rename(outFile,"build/videos/" + outFile,function(err){
     if(err)
       console.log(err);
-    hostVideo();
+    startServer();
   });
 }
 
 // init
 if(argv._.length <= 0) {
-  hostVideo();
+  startServer();
 } else {
   var
     filename = path.normalize(argv._[0]),
