@@ -6,7 +6,7 @@ var
 
 module.exports = function(app) {
   var 
-    fileExtensions = app.get("fileExtensions"),
+    subExt = "vtt",
     fileDir = app.get("fileDir"),
     uploadDir = app.get('uploadDir');
   
@@ -26,7 +26,7 @@ module.exports = function(app) {
         }
       });
 
-    if(fileExtensions[extension]) {
+    if(extension != subExt) {
       fm.move(fileinfo.name, "./../../" + fileDir, function(err){ 
         if(err)
           console.log(err);

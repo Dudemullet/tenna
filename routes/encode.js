@@ -70,7 +70,7 @@ module.exports = function(app, upload) {
     var 
       vid = PendingVideo(fileInfo);
 
-    fileEncodeOptions.input = vid.uploadDirFile;
+    fileEncodeOptions.input = vid.tmpName;
     fileEncodeOptions.output = vid.tmpName;
 
     encodeUploadedMovie(vid, fileEncodeOptions);
@@ -157,11 +157,12 @@ module.exports = function(app, upload) {
 
   /** Pending video
 
-  filename - filename (includes extension)
-  name - filename with no extension
-  uniqueKey - key to set the tmp filename to
-  extension - file extension ie. mp4, avi, etc...
-  tmpName - filename using */
+    filename - filename (includes extension)
+    name - filename with no extension
+    uniqueKey - key to set the tmp filename to
+    extension - file extension ie. mp4, avi, etc...
+    tmpName - filename using unique key
+  */
   function PendingVideo(fileInfo) {
     if(!(this instanceof PendingVideo))
       return new PendingVideo(fileInfo);

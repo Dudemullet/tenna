@@ -11,8 +11,8 @@ module.exports = function(app) {
         movieDir = app.get("movieDir"),
         encodeDir = app.get("encodeDir"),
         dirCollection = {},
-        supportedFileFormats = app.get("movieExtensions") || ["mp4"],
-        PATHSEP = path.sep;
+        PATHSEP = path.sep,
+        subExt = "vtt";
         
     app.use( "/videos", express.static("./build/videos"));
 
@@ -55,7 +55,7 @@ module.exports = function(app) {
 
     var validExtensionsFilter = function(index) {
         var fileNameExtension = index.substr(index.lastIndexOf(".")+1);
-        return (supportedFileFormats[fileNameExtension] || false);
+        return fileNameExtension != subExt;
     }
 
     var newVideo = function(val, staticDir) {
@@ -72,7 +72,7 @@ module.exports = function(app) {
             "fileName": filename, //includes extension
             "path": escape(val),
             "name": filename.substr(0,filename.lastIndexOf(".")),
-            "vttSub": "/videos/" + filename.substr(0,filename.lastIndexOf(".")) + ".vtt"
+            "vttSub": "/videos/" + filename.substr(0,filename.lastIndexOf(".")) + "." + subExt
         };
     }
 
