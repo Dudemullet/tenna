@@ -16,16 +16,6 @@ block content
   a(href="/setup")
     h1 Add videos here
   - }
-  - if(files.length) {
-  h2 Files
-  .row
-    each file in files
-      .tile.col-xs-12.col-sm-4.col-md-3
-        a.img-wrapper(href="/dl#{file.path}")
-          .bg-img(style="background-image:url('#{file.path}')")
-          span.glyphicon.glyphicon-circle-arrow-down.action-icon
-        div.tile-footer.bg-4(title="#{file.name}") #{file.name}
-  - }
   - if(processing.length) {
     h1 Encoding
     .row

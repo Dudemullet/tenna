@@ -10,7 +10,6 @@ module.exports = function(grunt) {
             all: [
             'build/**/*', //Delete everything in build EXCEPT ->
             '!build/videos/**', // User uploaded movies
-            '!build/wallpapers/**', // User uploaded files
             '!build/bower_components/**' // Deps installed via bower
             ]
         },

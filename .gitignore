@@ -1,6 +1,5 @@
 node_modules
 build
-src/bin/wallpapers/
 src/bin/videos/
 src/bin/js/libs/flat-ui/
 src/bin/js/vendor.js
