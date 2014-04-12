@@ -25,7 +25,7 @@ app.set("uploadDir", deployDir + 'uploads');
 var 
   port = app.get("port") || 8080,
   video = require('./routes/videos')(app),
-  // encoder = require('./routes/encode')(app,upload),
+  // encoder = require('./routes/encode')(app,upload)
   setup = require('./routes/setup')(app),
   os = require("os");
 
@@ -60,7 +60,7 @@ upload.on("end",function(fileInfo){
     console.log("File uploaded via api do nothing, other app logic will handle")
   else 
     console.log("File upload end continue to encoding");
-})
+});
 
 
 app.listen(port);
