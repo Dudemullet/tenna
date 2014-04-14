@@ -1,5 +1,8 @@
 "use strict"
-var fs = require('fs');
+var 
+    fs = require('fs'),
+    dirExp = require("node-dir");
+
 module.exports = function(app){
     var 
       deployDir = "./build",
@@ -23,22 +26,24 @@ module.exports = function(app){
     }
 
     var getFilesAtDir = function(dir, callback) {
-        fs.readdir(dir, function(err,files) { if(err) throw err;
-          var
-            fObjs = [],
-            filteredFiles = files.filter(validExtensionsFilter);
-          
+        var fObjs = [];
+        
+        dirExp.files(dir, function(err,files) { if(err) console.log(err);
+            if(!files)
+                return callback({'files':fObjs});
 
-          filteredFiles.forEach(function(val, i, arr){
-            arr[i] = val;
-            fObjs.push({
-                name:val.substr(0,val.lastIndexOf(".")),
-                path: videoDir+val
+            var filteredFiles = files.filter(validExtensionsFilter);
+
+            filteredFiles.forEach(function(val, i, arr){
+                arr[i] = val;
+                fObjs.push({
+                    name:val.substr(0,val.lastIndexOf(".")),
+                    path: videoDir+val
+                });
             });
-          });
-
-          callback({"files":fObjs});
-        })
+            
+            callback({"files":fObjs});
+        });
     }
 
     var validExtensionsFilter = function(index) {
