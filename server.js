@@ -34,30 +34,13 @@ var
     setup = require('./routes/setup')(app),
     os = require("os");
 
-app.configure(function () {
-    app.set('view engine', 'jade');
-    app.set('views', deployDir + 'views');
-    
-    app.enable('strict routing');
+app.set('view engine', 'jade');
+app.set('views', deployDir + 'views');
+app.enable('strict routing');
 
-    app.use(express.methodOverride());
-    app.use(express.json());
-    app.use(express.urlencoded());
+// use the static router
+app.use(express.static(deployDir));
 
-    // use the router
-    app.use(app.router);
-
-    // use the static router
-    app.use(express.static(deployDir));
-    
-    app.use(express.errorHandler({
-        dumpExceptions: true,
-        showStack: true
-    }));
-});
-
-app.listen(port);
-console.log('Get to app at http://' + os.hostname() + ":" + port);
 
 // Routes
 app.get('/', function (req, res, next) {
@@ -87,3 +70,6 @@ app.get('/dl/*/*', function(req, res){
     })
     res.sendfile(sysVideoDir + fileName);
 });
+
+app.listen(port);
+console.log('Get to app at http://' + os.hostname() + ":" + port);
