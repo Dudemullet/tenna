@@ -10,7 +10,7 @@
   "dependencies": {
     "grunt": "*",
     "grunt-cli": "~0.1.13",
-    "express": "*",
+    "express": "4.0.x",
     "jade": "*",
     "grunt-contrib-clean": "*",
     "grunt-contrib-copy": "*",
