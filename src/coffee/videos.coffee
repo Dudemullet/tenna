@@ -1,14 +1,19 @@
-$(document).ready -> 
-  target = window.location.hash
+$(document).ready ->
 
   scrollToVid = (video) ->
     $video = $(video);
+    if $video.length != 1
+      console.log 'bad video target: ', video
+      window.location.hash = ''
+      return
+
     scrollConf = 
       scrollTop: $video.offset().top
 
     $('html, body').stop().animate(scrollConf, 500, 'swing', ->
       window.location.hash = video)
 
+  target = window.location.hash
   if target
     scrollToVid target
 
