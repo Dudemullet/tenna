@@ -28,5 +28,7 @@ module.exports = function(app, config) {
   app.use(config.uploadUrl, upload.fileHandler());
   app.use(config.uploadUrl + "-api", api_upload.fileHandler());
 
+  // app.use("/upload", upload.fileHandler());
+  // upload.on("end", onUploadEnd);
   return upload;
 }
