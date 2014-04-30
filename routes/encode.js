@@ -90,31 +90,14 @@ module.exports = function(app, upload) {
       Get a list of the videos currently being encoded
     */
     var getProcessing = function(cb) {
-        var videoList = [];
-        
-        //Recursively get all files in dir
-        dirExp.files(encodeDir, function(err,files) { 
-            if(err) console.log(err);
-            console.log("getProcessing: " + util.inspect(files));
-
-            if(!files)
-                return cb(videoList);
-
-            //Per video, construct a useful video object
-            files.forEach(function(val,i,arr){
-                var 
-                filename = val.substr(val.lastIndexOf(PATHSEP)+1),
-                name = filename.substr(0,filename.lastIndexOf("."));
-                videoList.push({
-                    "name": name,
-                    "filename": filename
-                });
-            });
-            
-            console.log("videoList: \n\t" + util.inspect(videoList));
-            
-            return cb(videoList);
+        var videoList = _.map(encoder.encodeStates, function (vid) {
+            return {
+                filename: path.basename(vid.input),
+                name: vid.id
+            };
         });
+        console.log("videoList: \n\t" + util.inspect(videoList));
+        return cb(videoList);
     };
 
     return {
