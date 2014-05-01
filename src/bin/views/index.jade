@@ -16,7 +16,7 @@ block content
   a(href="/setup")
     h1 Add videos here
   - }
-  - if(processing.length) {
+  - if(processing && processing.length) {
     h1 Encoding
     .row
       each vid in processing

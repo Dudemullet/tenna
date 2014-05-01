@@ -9,9 +9,6 @@ var
 
 module.exports = function(app, upload) {
   var // App level variables
-    // encodeDir = app.get("encodeDir") || "./build/encode",
-    // videoDir = app.get("movieDir") || "./build/videos",
-    // uploadDir = app.get("uploadDir") || "./build/encode",
     encodeDir = "./build/encode",
     videoDir = "./build/videos",
     uploadDir = "./build/encode",
