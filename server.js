@@ -53,12 +53,13 @@ app.get('/', function (req, res, next) {
   })
 });
 
-
-var upload = require('./routes/upload')(app);
+var uploadConf = {"uploadUrl":"/upload"};
+var upload = require('./routes/upload')(app, uploadConf);
 upload.on("end",function(fileInfo){
-  console.log("upload end");
-  console.log(require("util").inspect(fileInfo));
-  // Here we should call our encoder with fileIn/fileOut paths
+  if(fileInfo.deleteUrl.match(uploadConf.uploadUrl + "-api"))
+    console.log("File uploaded via api do nothing, other app logic will handle")
+  else 
+    console.log("File upload end continue to encoding");
 })
 
 
