@@ -23,15 +23,16 @@ var startServer = function() {
 var encodeVideo = function(file, outFile) {
   
   var
-    handle = encoder.encode(file, outFile);
+    handle = encoder.encode(file, path.dirname(file));
   
   handle
-    .on("progress", function(progress){
-      updateBar(progress, file);
+    .on("progress", function(vid){
+      updateBar(vid.progress, file);
     })
-    .on("complete", function(params){
-      encodeComplete(params, outFile);
-    })
+    .on("complete", function(vid){
+      encodeComplete(vid, outFile);
+      fs.renameSync(vid.output, outFile);
+    });
 }
 
 var updateBar = function(progress, filename) {
