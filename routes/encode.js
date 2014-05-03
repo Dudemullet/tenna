@@ -8,7 +8,7 @@ var
   fs = require("fs"),
   Encoder = require(__dirname + '/../lib/encoder'),
   EventEmitter = require('events').EventEmitter,
-  _ = require('underscore');
+  _ = require('lodash');
 
 
 module.exports = function(app, upload) {
