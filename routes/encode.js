@@ -24,30 +24,29 @@ module.exports = function(app, upload) {
     var startEncode = function(fileInfo) {
         console.log('start encode ', fileInfo);
         var inputName = uploadDir + '/' + fileInfo.name
-        var encoding = encoder.encode(inputName, './build/encode')
+        var encoding = encoder.encode(inputName, './build/encode');
+        encoding
             .on('error', function (err) {
                 console.log('Error while encoding: ', err);
             })
-            .on('progress', function (vid) {
-
-            })
-            .on('complete', function (vid) {
+            .on('complete', function () {
                 var fileName = fileInfo.name;
                 var lastDot = fileName.lastIndexOf('.');
                 var withoutExt = (lastDot > 0) ? fileName.substr(0, lastDot) : fileName
                 var endName = videoDir + "/" + withoutExt + '.' + movieExt;
+                var vid = encoding.vid;
                 fs.rename(vid.output, endName, function(err) {
                     if (err) {
                         console.log('Error renameing ', err);
                         return;
                     }
-
+                    
                     fs.unlink(vid.input, function(err){
                         if (err) {
                             console.log('Error unlinking ', vid.input, err);
                             return;
                         }
-                        events.emit('encodingComplete', encoding.vid);
+                        events.emit('encodingComplete', vid);
                     });
                 });
             });

@@ -26,10 +26,11 @@ var encodeVideo = function(file, outFile) {
     handle = encoder.encode(file, path.dirname(file));
   
   handle
-    .on("progress", function(vid){
-      updateBar(vid.progress, file);
+    .on("progress", function(progress){
+      updateBar(progress, file);
     })
-    .on("complete", function(vid){
+    .on("complete", function(){
+      var vid = handle.vid;
       encodeComplete(vid, outFile);
       fs.renameSync(vid.output, outFile);
     });
