@@ -23,7 +23,7 @@ var startServer = function() {
 var encodeVideo = function(file, outFile) {
   
   var
-    handle = encoder.encode(file, path.dirname(file));
+    handle = encoder.encode(file, path.dirname(outFile));
   
   handle
     .on("progress", function(progress){
@@ -32,7 +32,6 @@ var encodeVideo = function(file, outFile) {
     .on("complete", function(){
       var vid = handle.vid;
       encodeComplete(vid, outFile);
-      fs.renameSync(vid.output, outFile);
     });
 }
 
@@ -47,7 +46,7 @@ var updateBar = function(progress, filename) {
 var encodeComplete =  function(params, outFile) {
   bar.terminate();
   console.log("Encode complete");
-  fs.rename(outFile,"build/videos/" + outFile,function(err){
+  fs.rename(params.output,"build/videos/" + outFile,function(err){
     if(err)
       console.log(err);
     startServer();
