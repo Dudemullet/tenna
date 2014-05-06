@@ -59,7 +59,7 @@ module.exports = function(grunt) {
         },
         watch: {
             dev: {
-                files: ['src/less/**', 'src/bin/views/**', 'src/js/**',"src/coffee/**","src/bin/config.js"],
+                files: ['src/**','routes/**','lib/**','!src/bin/js/libs/**'],
                 tasks: [ 'default' ]
             }
         },
