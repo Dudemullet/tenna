@@ -31,7 +31,8 @@
     "matchdep": "~0.3.0",
     "grunt-contrib-coffee": "~0.8.2",
     "grunt-mkdir": "~0.1.1",
-    "lodash": "~2.4.1"
+    "lodash": "~2.4.1",
+    "uid2": "0.0.3"
   },
   "scripts": {
     "postinstall": "grunt"

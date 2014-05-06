@@ -19,7 +19,7 @@ vueconf =
       self = this
       $.get "/encode/status/" + self.videoname , (res) ->
         self.eta = res.eta
-        self.complete = res.complete
+        self.complete = res.percentComplete
       .done (res) ->
         setTimeout( ()->
           self.getData()

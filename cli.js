@@ -4,7 +4,8 @@
 var 
   progress = require('progress'),
   util = require('util'),
-  encoder = require('./routes/encode')(),
+  Encoder = require('./lib/encoder'),
+  encoder = new Encoder(),
   fs = require('fs'),
   path = require('path'),
   argv = require('minimist')(process.argv.slice(2));
@@ -22,15 +23,16 @@ var startServer = function() {
 var encodeVideo = function(file, outFile) {
   
   var
-    handle = encoder.encode(file, outFile);
+    handle = encoder.encode(file, path.dirname(outFile));
   
   handle
     .on("progress", function(progress){
       updateBar(progress, file);
     })
-    .on("complete", function(params){
-      encodeComplete(params, outFile);
-    })
+    .on("complete", function(){
+      var vid = handle.vid;
+      encodeComplete(vid, outFile);
+    });
 }
 
 var updateBar = function(progress, filename) {
@@ -44,7 +46,7 @@ var updateBar = function(progress, filename) {
 var encodeComplete =  function(params, outFile) {
   bar.terminate();
   console.log("Encode complete");
-  fs.rename(outFile,"build/videos/" + outFile,function(err){
+  fs.rename(params.output,"build/videos/" + outFile,function(err){
     if(err)
       console.log(err);
     startServer();
