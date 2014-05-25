@@ -11,7 +11,7 @@ var
   _ = require('lodash');
 
 
-module.exports = function(app, upload) {
+module.exports = function(app) {
   var // App level variables
     encodeDir = "./build/encode",
     videoDir = "./build/videos",
@@ -20,40 +20,6 @@ module.exports = function(app, upload) {
     PATHSEP = path.sep,
     events = new EventEmitter(),
     movieExt = 'mp4';
-
-    var startEncode = function(fileInfo) {
-        console.log('start encode ', fileInfo);
-        var inputName = uploadDir + '/' + fileInfo.name
-        var encoding = encoder.encode(inputName, './build/encode');
-        encoding
-            .on('error', function (err) {
-                console.log('Error while encoding: ', err);
-            })
-            .on('complete', function () {
-                var fileName = fileInfo.name;
-                var lastDot = fileName.lastIndexOf('.');
-                var withoutExt = (lastDot > 0) ? fileName.substr(0, lastDot) : fileName
-                var endName = videoDir + "/" + withoutExt + '.' + movieExt;
-                var vid = encoding.vid;
-                fs.rename(vid.output, endName, function(err) {
-                    if (err) {
-                        console.log('Error renameing ', err);
-                        return;
-                    }
-                    
-                    fs.unlink(vid.input, function(err){
-                        if (err) {
-                            console.log('Error unlinking ', vid.input, err);
-                            return;
-                        }
-                        events.emit('encodingComplete', vid);
-                    });
-                });
-            });
-        events.emit('encodingStart', encoding.vid);
-    };
-
-    upload.on('end', startEncode);
 
     app.get("/encode/status/:filename", function(req, res, next) {
         
