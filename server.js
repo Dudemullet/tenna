@@ -68,7 +68,7 @@ upload.on("end",function(fileInfo){
 
 var encodeVideo = function(file, outFile) {
   var
-    handle = encoder.encode(file, "./build/encode");
+    handle = encoder.encode(file, outFile);
   
   handle
     .on("progress", function(progress){

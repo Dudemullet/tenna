@@ -13,13 +13,9 @@ var
 
 module.exports = function(app) {
   var // App level variables
-    encodeDir = "./build/encode",
-    videoDir = "./build/videos",
-    uploadDir = "./build/uploads",
     encoder = new Encoder(),
     PATHSEP = path.sep,
-    events = new EventEmitter(),
-    movieExt = 'mp4';
+    events = new EventEmitter();
 
     app.get("/encode/status/:filename", function(req, res, next) {
         
@@ -40,6 +36,7 @@ module.exports = function(app) {
     app.get('/encode', function(req, res, next) {
         console.log("GET: encode");
         getProcessing(function(videoList) {
+          console.log("VIDEOLIST: " + util.inspect(videoList));
             res.render("encode",{"processing":videoList});
         });
     });
@@ -61,7 +58,6 @@ module.exports = function(app) {
                 name: vid.id
             };
         });
-        console.log("videoList: \n\t" + util.inspect(videoList));
         return cb(videoList);
     };
 
