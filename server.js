@@ -8,19 +8,12 @@ var
   config = require(deployDir + "config.js"),
   path = require('path'),
   Encoder = require('./lib/encoder'),
-  encoder = new Encoder();
-
-function arrToObj(arr){
-    var a = {};
-    var i = arr.length;
-    while(i--)
-        a[arr[i]] = true;
-
-    return a;
-}
+  encoder = new Encoder(),
+  sets = require("simplesets"),
+  uploadConf = {"uploadUrl":"/upload"};
 
 app.set("port",config.port);
-app.set("movieExtensions", arrToObj(config.movieExtensions));
+app.set("movieExtensions",new sets.Set(config.movieExtensions));
 app.set("movieDir", deployDir + config.movieDir);
 app.set("encodeDir", deployDir + config.encodeDir);
 app.set("uploadDir", deployDir + 'uploads');
@@ -30,6 +23,7 @@ var
   video = require('./routes/videos')(app),
   encoding = require('./routes/encode')(app),
   setup = require('./routes/setup')(app),
+  upload = require('./routes/upload')(app, uploadConf),
   os = require("os");
 
 app.set('view engine', 'jade');
@@ -56,13 +50,12 @@ app.get('/', function (req, res, next) {
   })
 });
 
-var uploadConf = {"uploadUrl":"/upload"};
-var upload = require('./routes/upload')(app, uploadConf);
 upload.on("end",function(fileInfo){
+  var uploadedFile = path.normalize("./build/uploads/"+fileInfo.name);
   if(fileInfo.deleteUrl.match(uploadConf.uploadUrl + "-api"))
     console.log("File uploaded via api do nothing, other app logic will handle")
   else {
-    encodeVideo( path.normalize("./build/uploads/"+fileInfo.name), "./build/videos");
+    encodeVideo(uploadedFile, "./build/videos");
   }
 });
 
@@ -75,12 +68,8 @@ var encodeVideo = function(file, outFile) {
       console.log("server progress");
     })
     .on("complete", function(){
-      console.log("Encode complete");
+      fs.unlink(file);
     });
-
-    var encodeComplete = function(vid, outFile) {
-      console.log("Vid: "+ vid);
-    }    
 }
 
 app.listen(port);
