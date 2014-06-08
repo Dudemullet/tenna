@@ -1,38 +1,30 @@
 'use strict';
 
 var 
-    express = require('express'),
-    app = express(),
-    fs = require('fs'),
-    deployDir = "./build/",
-    config = require(deployDir + "config.js");
-
-function arrToObj(arr){
-    var a = {};
-    var i = arr.length;
-    while(i--)
-        a[arr[i]] = true;
-
-    return a;
-}
+  express = require('express'),
+  app = express(),
+  fs = require('fs'),
+  deployDir = "./build/",
+  config = require(deployDir + "config.js"),
+  path = require('path'),
+  Encoder = require('./lib/encoder'),
+  encoder = new Encoder(),
+  sets = require("simplesets"),
+  uploadConf = {"uploadUrl":"/upload"};
 
 app.set("port",config.port);
-app.set("supportedExtensions", arrToObj(config.getSupportedExtensions()));
-app.set("fileExtensions", arrToObj(config.fileExtensions));
-app.set("movieExtensions", arrToObj(config.movieExtensions));
+app.set("movieExtensions",new sets.Set(config.movieExtensions));
 app.set("movieDir", deployDir + config.movieDir);
-app.set("fileDir", deployDir + config.fileDir);
 app.set("encodeDir", deployDir + config.encodeDir);
 app.set("uploadDir", deployDir + 'uploads');
 
 var 
-    port = app.get("port") || 8080,
-    video = require('./routes/videos')(app),
-    file = require('./routes/file_routes')(app),
-    upload = require('./routes/upload')(app),
-    encoder = require('./routes/encode')(app,upload),
-    setup = require('./routes/setup')(app),
-    os = require("os");
+  port = app.get("port") || 8080,
+  video = require('./routes/videos')(app),
+  encoding = require('./routes/encode')(app),
+  setup = require('./routes/setup')(app),
+  upload = require('./routes/upload')(app, uploadConf),
+  os = require("os");
 
 app.set('view engine', 'jade');
 app.set('views', deployDir + 'views');
@@ -41,35 +33,44 @@ app.enable('strict routing');
 // use the static router
 app.use(express.static(deployDir));
 
-
 // Routes
 app.get('/', function (req, res, next) {
-    video.getMovies(function(videos) {
-        encoder.getProcessing(function(processing) {
-            file.getFiles(function(foundFiles) {
-                var out = {
-                    "videos":videos.slice(0,10),
-                    "files":foundFiles.files.slice(0,10),
-                    "processing":processing
-                };
-            res.render("index",out);
-            })
-        })
+  video.getMovies(function(videos) {
+    encoding.getProcessing(function(processing) {
+      var out = {
+        "videos":videos.slice(0,10),
+        "processing":processing 
+      };
+      res.render("index",out);
     })
+    var out = {
+      "videos":videos.slice(0,10),
+    };
+    res.render("index",out);
+  })
 });
 
-//Static route to force static file download
-app.get('/dl/*/*', function(req, res){
-    var path = req.path;
-    var fileName = path.substr(path.lastIndexOf("/")+1);
-    var videoDir = 'wallpapers/';
-    var sysVideoDir = deployDir + videoDir;
-    
-    res.set({
-        "Content-type":"application/download"
-    })
-    res.sendfile(sysVideoDir + fileName);
+upload.on("end",function(fileInfo){
+  var uploadedFile = path.normalize("./build/uploads/"+fileInfo.name);
+  if(fileInfo.deleteUrl.match(uploadConf.uploadUrl + "-api"))
+    console.log("File uploaded via api do nothing, other app logic will handle")
+  else {
+    encodeVideo(uploadedFile, "./build/videos");
+  }
 });
+
+var encodeVideo = function(file, outFile) {
+  var
+    handle = encoder.encode(file, outFile);
+  
+  handle
+    .on("progress", function(progress){
+      console.log("server progress");
+    })
+    .on("complete", function(){
+      fs.unlink(file);
+    });
+}
 
 app.listen(port);
 console.log('Get to app at http://' + os.hostname() + ":" + port);

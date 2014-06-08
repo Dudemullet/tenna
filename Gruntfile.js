@@ -10,7 +10,6 @@ module.exports = function(grunt) {
             all: [
             'build/**/*', //Delete everything in build EXCEPT ->
             '!build/videos/**', // User uploaded movies
-            '!build/wallpapers/**', // User uploaded files
             '!build/bower_components/**' // Deps installed via bower
             ]
         },
@@ -60,7 +59,7 @@ module.exports = function(grunt) {
         },
         watch: {
             dev: {
-                files: ['src/less/**', 'src/bin/views/**', 'src/js/**',"src/coffee/**","src/bin/config.js"],
+                files: ['src/**','routes/**','lib/**','!src/bin/js/libs/**'],
                 tasks: [ 'default' ]
             }
         },

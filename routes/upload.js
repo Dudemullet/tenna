@@ -1,40 +1,34 @@
 "use strict";
 var 
   upload = require('jquery-file-upload-middleware'),
-  fs = require('fs'),
-  os = require('os');
+  api_upload = require('jquery-file-upload-middleware'),
+  os = require('os'),
+  _ = require('lodash'),
+  express = require('express'),
+  router = express.Router();
 
-module.exports = function(app) {
-  var 
-    fileExtensions = app.get("fileExtensions"),
-    fileDir = app.get("fileDir"),
-    uploadDir = app.get('uploadDir');
-  
-  upload.configure({
-    tmpDir: os.tmpDir(),
-    uploadDir: uploadDir,
-    uploadUrl: '/upload'
-  });
+// =====================================
+//    upload route
+// 
+// config parameters are
+// 
+//    - tmpDir
+//    - uploadUrl
+//    - uploadDir
+// =====================================
+module.exports = function(app, config) {
+  var
+    config = _.extend({
+      tmpDir: os.tmpDir(),
+      uploadDir: app.get('uploadDir'),
+      uploadUrl: '/upload'
+    },config);
 
-  var onUploadEnd = function(fileinfo) {
-    var 
-      filename = fileinfo.name,
-      extension = fileinfo.extension = filename.substr(filename.lastIndexOf(".")+1),
-      fm = upload.fileManager({ //We do this here because we're recylcing this in encode.js
-        uploadDir: function() {
-          return uploadDir;
-        }
-      });
+  upload.configure(config);
+  app.use(config.uploadUrl, upload.fileHandler());
+  app.use(config.uploadUrl + "-api", api_upload.fileHandler());
 
-    if(fileExtensions[extension]) {
-      fm.move(fileinfo.name, "./../../" + fileDir, function(err){ 
-        if(err)
-          console.log(err);
-      });
-    }
-  };
-
-  app.use("/upload", upload.fileHandler());
-  upload.on("end", onUploadEnd);
+  // app.use("/upload", upload.fileHandler());
+  // upload.on("end", onUploadEnd);
   return upload;
 }
