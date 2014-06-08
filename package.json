@@ -16,7 +16,7 @@
     "grunt-contrib-copy": "*",
     "grunt-contrib-less": "*",
     "grunt-contrib-watch": "*",
-    "handbrake-js": "~0.3.2",
+    "handbrake-js": "^1.1",
     "node-dir": "*",
     "escape-html": "~1.0.1",
     "jquery-file-upload-middleware": ">=0.1.0",
