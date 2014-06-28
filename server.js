@@ -43,10 +43,6 @@ app.get('/', function (req, res, next) {
       };
       res.render("index",out);
     })
-    var out = {
-      "videos":videos.slice(0,10),
-    };
-    res.render("index",out);
   })
 });
 
