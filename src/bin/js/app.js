@@ -1,1 +1,2 @@
-$ = jQuery = require("jquery");
+window.$ = jQuery = require("jquery");
+window.Vue = require('vue');
