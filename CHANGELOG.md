@@ -1,3 +1,8 @@
+### Version 0.1.1
+
+- [919dc52] Remove bower
+- [9cb8eab] Add browserify as dev-deps, Include vue in browserify bundle
+
 ### Version 1.0
 
 - Major refactor to keep everything modularized
