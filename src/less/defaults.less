@@ -1,65 +1,65 @@
 html,body {
-    background:@background-color;
-    color:@font-color;
+  background: @background-color;
+  color: @font-color;
+
+  a {
+    color: #FFF;
+
+    &:hover {
+      color: #FFF;
+    }
+  }
 }
 
 .row {
+  & > * {
+    padding: 0;
+  }
 
-    & > * { 
-        padding: 0;
-    }
-
-    //iphone
-    @media (max-width: @screen-xs-max) {
-        .clearfix;
-        padding-left:  (@gutter / 2);
-        padding-right: (@gutter / 2);
-    }
+  //iphone
+  @media (max-width: @screen-xs-max) {
+    .clearfix;
+    padding-left:  (@gutter / 2);
+    padding-right: (@gutter / 2);
+  }
 }
 
 .tile {
-    border-radius: 0;
-    background-color: transparent;
-    padding: @app-padding;
-    
-    .img-wrapper,
-    .video-wrapper {
-        position: relative;
-        color:#FFF;
-        display:block;
-        height: @tile-height;
-        background-color: @amethyst;
-
-        .action-icon {
-            @icon-font-size: (@tile-height / 2);
-            position: absolute;
-            font-size: @icon-font-size;
-            left: 0;
-            right: 0;
-            margin: 0 auto;
-            line-height: @tile-height;
-        }
-        .bg-img {
-            height: @tile-height;
-            position: relative;
-            overflow: hidden;
-            background-position:50% 50%;
-            opacity: 0.3;
-        }
-    }
-
-    .tile-footer {
-        padding: @app-padding;
-        text-align: left;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        background-color: @amethyst;
-        opacity: 0.9;
-
-        .action-icon {
-            color:white;
-            float:right;
-        }
-    }
+  border-radius: 0;
+  background-color: transparent;
+  padding: @app-padding;
 }
+
+.title {
+  padding: 0;
+  font-weight: 400;
+  font-size: 1.5em;
+  text-align: left;
+}
+
+.tile-footer {
+  padding: @app-padding;
+  text-align: left;
+  font-weight: bold;
+  background-color: @wisteria;
+
+  &.btn {
+    width: 100%;
+    border-radius: 0;
+  }
+}
+
+.video-wrapper {
+  position: relative;
+  color:#FFF;
+  display:block;
+  height: @tile-height;
+  background-color: @amethyst;
+
+  .action-icon {
+    @icon-font-size: (@tile-height / 2);
+    font-size: @icon-font-size;
+    line-height: @tile-height;
+  }
+}
+

@@ -7,18 +7,16 @@ block content
     h1 Videos
     .row
         - for (var i in videos) {
-            .tile.col-xs-12.col-sm-4.col-md-3(id='#{videos[i].name}')
-                .video-wrapper
-                    span.glyphicon.glyphicon-play.action-icon
-                    video(preload="none")
-                        source(src="#{videos[i].stat}",type="video/mp4")
-                        track(src="#{videos[i].vttSub}", kind="subtitle", srclang="en-US", label="English")
-                .tile-footer.bg-16(title="#{videos[i].name}") #{videos[i].name}
-                    a.action-icon(href="#{videos[i].stat}")
-                        i.glyphicon.glyphicon-circle-arrow-down
+          video.col-xs-12.col-sm-12.col-md-12.hide(controls, data-vid='#{videos[i].name}', src="#{videos[i].stat}")
         -}
-    
-    include blocks/nav
+    .row
+        - for (var i in videos) {
+            .tile.col-xs-12.col-sm-4.col-md-3.col-lg-3
+                .title.overflow(title="#{videos[i].name}") #{videos[i].name}
+                .video-wrapper(id='#{videos[i].name}')
+                    span.glyphicon.glyphicon-play.action-icon.center
+                a.tile-footer.action-icon.btn(href="#{videos[i].stat}") Link
+        -}
 
 block footer
 block scripts

@@ -17,6 +17,13 @@ $(document).ready ->
   if target
     scrollToVid target
 
-  $(".row").on "click",".tile", (evt)->
-    tile = this
-    $(tile).find("video")[0].play()
+  $(".row").on "click",".video-wrapper", (evt)->
+    videoTarget = $(this).attr('id')
+    $("video").each (i,e) ->
+      $e = $(e)
+      classToggle = $e.attr("data-vid") == videoTarget
+      $e.toggleClass "hide",!classToggle
+      $e.toggleClass "show",classToggle
+      e.pause()
+
+    $("video.show")[0].play()

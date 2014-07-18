@@ -11,7 +11,7 @@ block content
       .tile.col-xs-12.col-sm-4.col-md-3
         a.video-wrapper(href="/videos/##{xar.name}")
           span.glyphicon.glyphicon-play.action-icon
-        div.tile-footer.bg-16(title="#{xar.name}") #{xar.name}
+        div.tile-footer.overflow(title="#{xar.name}") #{xar.name}
   - } else {
   a(href="/setup")
     h1 Add videos here
@@ -23,7 +23,7 @@ block content
         .tile.col-xs-12.col-sm-4.col-md-3(data-vidname= "#{vid.name}")
           .video-wrapper
             span.glyphicon.glyphicon-random.action-icon
-          div.tile-footer.bg-16(title="#{vid.name}") #{vid.name}
+              div.tile-footer(title="#{vid.name}") #{vid.name}
   - }
 block footer
-  
+
