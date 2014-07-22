@@ -34,19 +34,16 @@ module.exports = function(app) {
     });
 
     app.get('/encode', function(req, res, next) {
-        console.log("GET: encode");
         getProcessing(function(videoList) {
-          console.log("VIDEOLIST: " + util.inspect(videoList));
             res.render("encode",{"processing":videoList});
         });
     });
 
     app.get('/get/processing', function(req, res, next) {
-        console.log("GET processing videos JSON list");
         getProcessing(function(videoList) {
             res.json(videoList)
         });
-    });  
+    });
 
     /*
       Get a list of the videos currently being encoded

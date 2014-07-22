@@ -49,7 +49,7 @@ app.get('/', function (req, res, next) {
 upload.on("end",function(fileInfo){
   var uploadedFile = path.normalize("./build/uploads/"+fileInfo.name);
   if(fileInfo.deleteUrl.match(uploadConf.uploadUrl + "-api"))
-    console.log("File uploaded via api do nothing, other app logic will handle")
+    console.log("File uploaded via api");
   else {
     encodeVideo(uploadedFile, "./build/videos");
   }
@@ -58,11 +58,8 @@ upload.on("end",function(fileInfo){
 var encodeVideo = function(file, outFile) {
   var
     handle = encoder.encode(file, outFile);
-  
+
   handle
-    .on("progress", function(progress){
-      console.log("server progress");
-    })
     .on("complete", function(){
       fs.unlink(file);
     });
