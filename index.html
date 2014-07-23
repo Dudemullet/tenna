@@ -3,13 +3,11 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Playertwo by Dudemullet</title>
+    <title>Tenna by Dudemullet</title>
 
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <script src="javascripts/scale.fix.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
@@ -17,54 +15,90 @@
   <body>
     <div class="wrapper">
       <header>
-        <h1>Playertwo</h1>
-        <p>Stream videos from your computer to your video game consoles</p>
-        <p class="view"><a href="https://github.com/Dudemullet/playertwo">View the Project on GitHub <small>Dudemullet/playertwo</small></a></p>
+        <h1>Tenna</h1>
+        <p>Stream videos from your computer to your iPad, iPhone, x360, Xbone, ps4, android devices and other laptops or pc&#39;s in your home network. Makes streaming the movies to a device already connected to your tv, easy.</p>
+
+        <p class="view"><a href="https://github.com/Dudemullet/tenna">View the Project on GitHub <small>Dudemullet/tenna</small></a></p>
+
+
         <ul>
-          <li><a href="https://github.com/Dudemullet/playertwo/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/Dudemullet/playertwo/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/Dudemullet/playertwo">View On <strong>GitHub</strong></a></li>
+          <li><a href="https://github.com/Dudemullet/tenna/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/Dudemullet/tenna/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/Dudemullet/tenna">View On <strong>GitHub</strong></a></li>
         </ul>
       </header>
       <section>
-        <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
+        <h1>
+<a name="tenna---beta" class="anchor" href="#tenna---beta"><span class="octicon octicon-link"></span></a>Tenna - BETA</h1>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+<p>A node js application that lets you easily stream most videos from any PC/laptop in your home network, to other devices in the network with a browser.</p>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
+<h2>
+<a name="supported-devices" class="anchor" href="#supported-devices"><span class="octicon octicon-link"></span></a>supported devices</h2>
+
+<ul>
+<li>xbox360</li>
+<li>iPhone/iPod Touch</li>
+<li>iPad</li>
+<li>Android devices</li>
+<li>PS Vita</li>
+</ul><p>Basically any device that supports the <code>&lt;video&gt;</code> element <strong>MP4</strong> encoded.</p>
+
+<h2>
+<a name="setup" class="anchor" href="#setup"><span class="octicon octicon-link"></span></a>Setup</h2>
+
+<p>clone this repository to your computer. In that directory type in the following commands:</p>
+
+<pre><code>git clone https://github.com/Dudemullet/tenna
+npm install
+grunt
+node server
 </code></pre>
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+<h2>
+<a name="cli-interface" class="anchor" href="#cli-interface"><span class="octicon octicon-link"></span></a>CLI Interface</h2>
+
+<p>You can also encode a video on the fly</p>
+
+<pre><code>npm install -g tenna
+tenna &lt;path/to/video&gt;
+</code></pre>
+
+<p>or just start the server</p>
+
+<pre><code>tenna
+</code></pre>
+
+<h2>
+<a name="endpoints" class="anchor" href="#endpoints"><span class="octicon octicon-link"></span></a>Endpoints</h2>
 
 <h3>
-<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
+<a name="adding-videosfiles" class="anchor" href="#adding-videosfiles"><span class="octicon octicon-link"></span></a>Adding Videos/Files</h3>
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
+<p>Drag and drop videos or files at:</p>
+
+<p><code>localhost:8081/setup</code></p>
+
+<h2>
+<a name="encode-status" class="anchor" href="#encode-status"><span class="octicon octicon-link"></span></a>Encode status</h2>
+
+<p>While files are being encoded, you can view their status at:</p>
+
+<p><code>localhost:8081/encode</code></p>
 
 <h3>
-<a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
+<a name="watching-videos" class="anchor" href="#watching-videos"><span class="octicon octicon-link"></span></a>Watching Videos</h3>
 
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+<p>The only encoding supported on the vita is h.264. Luckily this is the most supported codec by browsers. Videos will be hosted from:</p>
 
-<h3>
-<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
-
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
-
-<h3>
-<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
-
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
+<p><code>localhost:8081/videos</code></p>
       </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/Dudemullet">Dudemullet</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
     </div>
-    <footer>
-      <p>Project maintained by <a href="https://github.com/Dudemullet">Dudemullet</a></p>
-      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
-    </footer>
-    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    <script src="javascripts/scale.fix.js"></script>
     
   </body>
 </html>
