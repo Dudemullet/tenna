@@ -1,3 +1,16 @@
+### Version 0.1.3
+
+Published to npm! Also, renamed the project from playertwo to tenna. As in (an)tenna.
+
+The preferred method of using tenna for now is
+
+```
+npm install -g tenna
+tenna path/to/video(optional)
+```
+
+- [0c209aa](https://github.com/Dudemullet/tenna/commit/0c209aa8cefafcdbc8077017ea8baa26f0481655) removes references to name player two, add consistent nav bar, changes name from playertwo to tenna
+
 ### Version 0.1.2
 
 Kinda major ui changes with this release. We have made it so that theres is (apparently) a single video element in the page. Clicking on the 'play' icon for a video tile will actually toggle visibility between the different video elements and start playing on the clicked videos element.
