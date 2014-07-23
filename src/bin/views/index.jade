@@ -1,7 +1,7 @@
 extends layout
 
 block vars
-    - var title = "PlayerTwo"
+    - var title = "Tenna"
 
 block content
   h2 Videos
@@ -25,5 +25,7 @@ block content
             span.glyphicon.glyphicon-random.action-icon
               div.tile-footer(title="#{vid.name}") #{vid.name}
   - }
-block footer
 
+  include blocks/nav
+
+block footer

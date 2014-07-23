@@ -1,7 +1,7 @@
 extends layout
 
 block vars
-    - var title = "Player two - Setup"
+    - var title = "Tenna"
 
 block content
   h1 Setup
@@ -11,11 +11,12 @@ block content
       span Drag things or click to start uploading
       span.glyphicons.glyphicon-plus
       input#fileupload(type="file", name="files[]", data-url="/upload", multiple)
-    .col-lg-10.col-lg-offset-1.col-md-10.col-md-offset-1.col-sm-10.col-sm-offset-1        
+    .col-lg-10.col-lg-offset-1.col-md-10.col-md-offset-1.col-sm-10.col-sm-offset-1
       #progress.progress
         .progress-bar.progress-bar-success
-    
-block footer
+
+  include blocks/nav
+
 block scripts
   script(type="text/javascript" src="/js/libs/jquery.ui.widget.js")
   script(type="text/javascript" src="/js/libs/jquery.fileupload.js")

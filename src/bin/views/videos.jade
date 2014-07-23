@@ -1,7 +1,7 @@
 extends layout
 
 block vars
-    - var title = "Player two - Videos"
+    - var title = "Tenna"
 
 block content
     h1 Videos
@@ -18,6 +18,7 @@ block content
                 a.tile-footer.action-icon.btn(href="#{videos[i].stat}") Link
         -}
 
-block footer
+    include blocks/nav
+
 block scripts
   script(type="text/javascript" src="/js/videos.js")
