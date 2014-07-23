@@ -1,4 +1,4 @@
-# Tenna
+# Tenna - BETA
 A node js application that lets you easily stream most videos from any PC/laptop in your home network, to other devices in the network with a browser.
 
 ## supported devices
@@ -26,7 +26,7 @@ You can also encode a video on the fly
 
 ```
 npm install -g tenna
-tenna *path/to/video/*
+tenna <path/to/video>
 ```
 
 or just start the server

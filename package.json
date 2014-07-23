@@ -5,6 +5,17 @@
     "node": "*",
     "npm": "*"
   },
+  "author": {
+    "name" : "Dudemullet",
+    "email" : "luisg@nadafancy.com",
+    "url" : "http://nadafancy.com"
+  },
+  "keywords" : ["stream", "xbox", "video", "ps3", "vita", "xbmc", "tenna", "movies", "mp4", "divx", "handbrake"],
+  "repository" : {
+    "type": "git",
+    "url": "https://github.com/Dudemullet/tenna"
+  },
+  "files": ["build", "cli.js", "server.js", "lib", "routes"],
   "bin": "cli.js",
   "private": false,
   "dependencies": {
