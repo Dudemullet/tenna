@@ -7,13 +7,13 @@ var fs = require('fs'),
     path = require("path");
 
 module.exports = function(app) {
-    var 
+    var
         movieDir = app.get("movieDir"),
         encodeDir = app.get("encodeDir"),
         dirCollection = {},
         PATHSEP = path.sep,
         subExt = "vtt";
-        
+
     app.use( "/videos", express.static("./build/videos"));
 
     /*
@@ -48,20 +48,19 @@ module.exports = function(app) {
             filteredVideos.forEach(function(val,i,arr){
                 videoList.push(newVideo(val, movieDir));
             });
-            
+
             cb(videoList);
         });
     }
 
     var validExtensionsFilter = function(index) {
-        var fileNameExtension = index.substr(index.lastIndexOf(".")+1);
-        return fileNameExtension != subExt;
+        return path.extname(index) === ".mp4";
     }
 
     var newVideo = function(val, staticDir) {
         var filename = val.substr(val.lastIndexOf(PATHSEP)+1);
         var folderKey = val.substr(0,val.lastIndexOf(PATHSEP));
-        
+
         var strLen = staticDir.length;
         var staticDirPath = val.substr(val.indexOf(staticDir)+strLen);
         staticDir = staticDir.replace(/ /g,'-')
