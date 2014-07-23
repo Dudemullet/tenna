@@ -1,3 +1,8 @@
+### Version 0.1.4
+
+- [70b4461](https://github.com/Dudemullet/tenna/commit/70b4461b3d2ad702ca516ec0e571c41546cf9485) Updated to clearly state this is a beta
+- [ba850e5](https://github.com/Dudemullet/tenna/commit/ba850e55af1372dc3024db6650aed4e96ef251e0) Fix videos showing files that are not mp4
+
 ### Version 0.1.3
 
 Published to npm! Also, renamed the project from playertwo to tenna. As in (an)tenna.
