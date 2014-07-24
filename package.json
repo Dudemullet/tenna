@@ -10,7 +10,7 @@
     "email" : "luisg@nadafancy.com",
     "url" : "http://nadafancy.com"
   },
-  "homepage": "http://tenna.tv/"
+  "homepage": "http://tenna.tv/",
   "keywords" : ["stream", "xbox", "video", "ps3", "vita", "xbmc", "tenna", "movies", "mp4", "divx", "handbrake"],
   "repository" : {
     "type": "git",
