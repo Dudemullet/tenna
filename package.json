@@ -1,15 +1,16 @@
 {
   "name": "tenna",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "engines": {
     "node": "*",
     "npm": "*"
   },
   "author": {
-    "name" : "Dudemullet",
+    "name" : "Luis Gutierrez",
     "email" : "luisg@nadafancy.com",
     "url" : "http://nadafancy.com"
   },
+  "homepage": "http://tenna.tv/"
   "keywords" : ["stream", "xbox", "video", "ps3", "vita", "xbmc", "tenna", "movies", "mp4", "divx", "handbrake"],
   "repository" : {
     "type": "git",

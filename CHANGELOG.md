@@ -1,3 +1,7 @@
+### Version 0.1.5
+
+- [cd67e26](https://github.com/Dudemullet/tenna/commit/cd67e26bedfe43cf04e14b0b875605e96413ca14) Fixes 3 incorrect references to directories inside the build dir. they were being used without __dirname
+
 ### Version 0.1.4
 
 - [70b4461](https://github.com/Dudemullet/tenna/commit/70b4461b3d2ad702ca516ec0e571c41546cf9485) Updated to clearly state this is a beta
