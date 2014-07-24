@@ -46,7 +46,7 @@ var updateBar = function(progress, filename) {
 var encodeComplete =  function(params, outFile) {
   bar.terminate();
   console.log("Encode complete");
-  fs.rename(params.output,"build/videos/" + outFile,function(err){
+  fs.rename(params.output, __dirname +"/build/videos/" + outFile,function(err){
     if(err)
       console.log(err);
     startServer();

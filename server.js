@@ -4,7 +4,7 @@ var
   express = require('express'),
   app = express(),
   fs = require('fs'),
-  deployDir = "./build/",
+  deployDir = __dirname + "/build/",
   config = require(deployDir + "config.js"),
   path = require('path'),
   Encoder = require('./lib/encoder'),
@@ -47,11 +47,11 @@ app.get('/', function (req, res, next) {
 });
 
 upload.on("end",function(fileInfo){
-  var uploadedFile = path.normalize("./build/uploads/"+fileInfo.name);
+  var uploadedFile = path.normalize( deployDir + "/uploads/" +fileInfo.name);
   if(fileInfo.deleteUrl.match(uploadConf.uploadUrl + "-api"))
     console.log("File uploaded via api");
   else {
-    encodeVideo(uploadedFile, "./build/videos");
+    encodeVideo(uploadedFile, deployDir + "/videos");
   }
 });
 
