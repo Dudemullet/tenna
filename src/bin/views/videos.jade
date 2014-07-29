@@ -15,7 +15,8 @@ block content
                 .title.overflow(title="#{videos[i].name}") #{videos[i].name}
                 .video-wrapper(id='#{videos[i].name}')
                     span.glyphicon.glyphicon-play.action-icon.center
-                a.tile-footer.action-icon.btn(href="#{videos[i].stat}") Link
+                a.tile-footer.btn(href="#{videos[i].stat}") Link
+                a.tile-footer.delete-btn.btn(href="delete/#{videos[i].fileName}") Delete
         -}
 
     include blocks/nav

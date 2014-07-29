@@ -33,6 +33,17 @@ module.exports = function(app) {
         });
     });
 
+    app.all('/videos/delete/:id', function(req, res, next) {
+      var filename = req.params.id;
+      var filePath = path.normalize(movieDir + path.sep + filename);
+      fs.unlink(filePath, function(err){
+        if(err)
+          res.send(500);
+        else
+          res.send(200);
+      });
+    });
+
     var getMovies = function(cb) {
         var videoList = [];
 
