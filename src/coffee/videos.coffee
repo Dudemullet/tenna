@@ -27,3 +27,12 @@ $(document).ready ->
       e.pause()
 
     $("video.show")[0].play()
+
+  $(".row").on "click",".delete-btn", (evt)->
+    videoName = $(this).data('name')
+    $container = $(this).parents('.tile')
+    if !confirm("Are you sure you want to delete this video?")
+      return 0
+    $.get('delete/'+videoName)
+      .done ()->
+        $container.remove()
