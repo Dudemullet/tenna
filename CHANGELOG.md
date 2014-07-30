@@ -1,3 +1,8 @@
+### Version 0.1.6
+
+- [8a1618397243ed315dd321f6d06300d976200a87](https://github.com/Dudemullet/tenna/commit/8a1618397243ed315dd321f6d06300d976200a87)Adds ability to delete videos within the UI.
+- [154fa1a6772634d2d9db8917345cf785df39ff7b](https://github.com/Dudemullet/tenna/commit/154fa1a6772634d2d9db8917345cf785df39ff7b)Adds ability to delete via command line using the `tenna --clean` command
+
 ### Version 0.1.5
 
 - [cd67e26](https://github.com/Dudemullet/tenna/commit/cd67e26bedfe43cf04e14b0b875605e96413ca14) Fixes 3 incorrect references to directories inside the build dir. they were being used without __dirname
