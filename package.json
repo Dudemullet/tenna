@@ -6,17 +6,35 @@
     "npm": "*"
   },
   "author": {
-    "name" : "Luis Gutierrez",
-    "email" : "luisg@nadafancy.com",
-    "url" : "http://nadafancy.com"
+    "name": "Luis Gutierrez",
+    "email": "luisg@nadafancy.com",
+    "url": "http://nadafancy.com"
   },
   "homepage": "http://tenna.tv/",
-  "keywords" : ["stream", "xbox", "video", "ps3", "vita", "xbmc", "tenna", "movies", "mp4", "divx", "handbrake"],
-  "repository" : {
+  "keywords": [
+    "stream",
+    "xbox",
+    "video",
+    "ps3",
+    "vita",
+    "xbmc",
+    "tenna",
+    "movies",
+    "mp4",
+    "divx",
+    "handbrake"
+  ],
+  "repository": {
     "type": "git",
     "url": "https://github.com/Dudemullet/tenna"
   },
-  "files": ["build", "cli.js", "server.js", "lib", "routes"],
+  "files": [
+    "build",
+    "cli.js",
+    "server.js",
+    "lib",
+    "routes"
+  ],
   "bin": "cli.js",
   "private": false,
   "dependencies": {
@@ -35,7 +53,8 @@
     "uid2": "0.0.3",
     "simplesets": "~1.2.0",
     "vue": "~0.9.2",
-    "minimist": "~0.2.0"
+    "minimist": "~0.2.0",
+    "rimraf": "~2.2.8"
   },
   "scripts": {
     "prepublish": "grunt"

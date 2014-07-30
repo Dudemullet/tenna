@@ -48,7 +48,7 @@ module.exports = function(app) {
         var videoList = [];
 
         //Recursively get all files in dir
-        dirExp.files(movieDir, function(err,files) { if(err) console.log(err);
+        dirExp.files(movieDir, function(err,files) {
             if(!files)
                 return cb(videoList);
 

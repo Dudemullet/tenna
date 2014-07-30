@@ -1,19 +1,20 @@
 #!/usr/bin/env node
 "use strict";
 
-var 
+var
   progress = require('progress'),
   util = require('util'),
   Encoder = require('./lib/encoder'),
   encoder = new Encoder(),
   fs = require('fs'),
   path = require('path'),
-  argv = require('minimist')(process.argv.slice(2));
-
+  argv = require('minimist')(process.argv.slice(2)),
+  rimraf = require('rimraf');
 var
   barConfStr = 'encoding :title [:bar] :percent Elapsed: :elapseds ETA: :estimate',
-  bar = new progress(barConfStr, {total:25});
-  
+  bar = new progress(barConfStr, {total:25}),
+  videoDir = __dirname +"/build/videos/";
+
 
 var startServer = function() {
   var
@@ -46,7 +47,7 @@ var updateBar = function(progress, filename) {
 var encodeComplete =  function(params, outFile) {
   bar.terminate();
   console.log("Encode complete");
-  fs.rename(params.output, __dirname +"/build/videos/" + outFile,function(err){
+  fs.rename(params.output, videoDir + outFile,function(err){
     if(err)
       console.log(err);
     startServer();
@@ -54,6 +55,16 @@ var encodeComplete =  function(params, outFile) {
 }
 
 // init
+if(argv.clean) {
+  rimraf(videoDir, function(err){
+    if(err) {
+     console.log(err);
+     process.exit(1);
+    }
+    process.exit(0);
+  })
+}
+
 if(argv._.length <= 0) {
   startServer();
 } else {
@@ -61,6 +72,4 @@ if(argv._.length <= 0) {
     filename = path.normalize(argv._[0]),
     ext = path.extname(filename),
     base = path.basename(filename, ext);
-  
-  encodeVideo(filename, base + ".mp4");
 }
