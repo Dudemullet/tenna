@@ -39,11 +39,27 @@ app.get('/', function (req, res, next) {
     encoding.getProcessing(function(processing) {
       var out = {
         "videos":videos.slice(0,10),
-        "processing":processing 
+        "processing":processing
       };
       res.render("index",out);
     })
   })
+});
+
+app.get('/api', function(req, res, next) {
+  video.getMovies(function(videos) {
+    encoding.getProcessing(function(processing) {
+      var out = {
+        "videos":videos.slice(0,10),
+        "processing":processing
+      };
+      res.json(out);
+    })
+  })
+});
+
+app.get('/app', function(req, res, next) {
+  res.sendFile("index2.html", {"root":deployDir});
 });
 
 upload.on("end",function(fileInfo){
