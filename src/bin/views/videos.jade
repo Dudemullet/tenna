@@ -5,7 +5,7 @@ block vars
 
 block content
     h1 Videos
-    .row
+    .row.video-player
         - for (var i in videos) {
           video.col-xs-12.col-sm-12.col-md-12.hide(controls, data-vid='#{videos[i].name}', src="#{videos[i].stat}")
         -}
@@ -14,7 +14,7 @@ block content
             .tile.col-xs-12.col-sm-4.col-md-3.col-lg-3
                 .title.overflow(title="#{videos[i].name}") #{videos[i].name}
                 .video-wrapper(id='#{videos[i].name}')
-                    span.glyphicon.glyphicon-play.action-icon.center
+                    span.glyphicon.glyphicon-play.action-icon
                 a.tile-footer.btn(href="#{videos[i].stat}") Link
                 button.tile-footer.delete-btn.btn(data-name="#{videos[i].fileName}") Delete
         -}
