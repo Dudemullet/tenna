@@ -24,13 +24,13 @@ module.exports = function(grunt) {
             deps: {
                 files : [
                     {cwd:"node_modules/", src:"flat-ui/**", dest:"src/bin/js/libs/", expand:true},
-                    {   
+                    {
                         cwd:"node_modules/blueimp-file-upload/js",
                         src:"jquery.fileupload.js",
                         dest:"build/js/libs/",
                         expand:true
                     },
-                    {   
+                    {
                         cwd:"node_modules/blueimp-file-upload/js/vendor",
                         src:"jquery.ui.widget.js",
                         dest:"build/js/libs/",
@@ -45,7 +45,7 @@ module.exports = function(grunt) {
                     create: ['build/wallpapers', 'build/videos', 'build/encode']
                 }
             }
-        }, 
+        },
         less: {
             dev: {
                 options: {
@@ -76,8 +76,13 @@ module.exports = function(grunt) {
             vendor: {
                 src: ['src/bin/js/app.js'],
                 dest: 'src/bin/js/vendor.js'
+            },
+            options: {
+                browserifyOptions: {
+                debug: true
             }
         }
+      }
     });
 
     require('matchdep').filter('grunt-*').forEach(grunt.loadNpmTasks);
