@@ -1,6 +1,6 @@
 'use strict';
 
-var 
+var
   express = require('express'),
   app = express(),
   fs = require('fs'),
@@ -18,7 +18,7 @@ app.set("movieDir", deployDir + config.movieDir);
 app.set("encodeDir", deployDir + config.encodeDir);
 app.set("uploadDir", deployDir + 'uploads');
 
-var 
+var
   port = app.get("port") || 8080,
   video = require('./routes/videos')(app),
   encoding = require('./routes/encode')(app),
@@ -59,7 +59,7 @@ app.get('/api', function(req, res, next) {
 });
 
 app.get('/app', function(req, res, next) {
-  res.sendFile("index2.html", {"root":deployDir});
+  res.sendFile("index2.html", {"root":path.resolve(deployDir) });
 });
 
 upload.on("end",function(fileInfo){
