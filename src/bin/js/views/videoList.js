@@ -15,8 +15,8 @@ module.exports = Backbone.View.extend({
 
   render: function(){
     this.collection.each(function(video){
-      var videoVidew = new VideoView({ model: video});
-      this.$el.append(videoVidew.render().el);
+      var video = new VideoView({ model: video});
+      this.$el.append(video.render().el);
     },this);
 
     return this;

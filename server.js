@@ -26,37 +26,23 @@ var
   upload = require('./routes/upload')(app, uploadConf),
   os = require("os");
 
-app.set('view engine', 'jade');
-app.set('views', deployDir + 'views');
 app.enable('strict routing');
 
 // use the static router
 app.use(express.static(deployDir));
 
 // Routes
-app.get('/', function (req, res, next) {
-  video.getMovies(function(videos) {
-    encoding.getProcessing(function(processing) {
-      var out = {
-        "videos":videos.slice(0,10),
-        "processing":processing
-      };
-      res.render("index",out);
-    })
-  })
-});
-
-app.get('/api', function(req, res, next) {
-  video.getMovies(function(videos) {
-    encoding.getProcessing(function(processing) {
-      var out = {
-        "videos":videos.slice(0,10),
-        "processing":processing
-      };
-      res.json(out);
-    })
-  })
-});
+// app.get('/', function (req, res, next) {
+//   video.getMovies(function(videos) {
+//     encoding.getProcessing(function(processing) {
+//       var out = {
+//         "videos":videos.slice(0,10),
+//         "processing":processing
+//       };
+//       res.render("index",out);
+//     })
+//   })
+// });
 
 app.get('/app', function(req, res, next) {
   res.sendFile("index2.html", {"root":path.resolve(deployDir) });

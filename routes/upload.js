@@ -1,17 +1,15 @@
 "use strict";
-var 
+
+var
   upload = require('jquery-file-upload-middleware'),
-  api_upload = require('jquery-file-upload-middleware'),
   os = require('os'),
-  _ = require('lodash'),
-  express = require('express'),
-  router = express.Router();
+  _ = require('lodash');
 
 // =====================================
 //    upload route
-// 
+//
 // config parameters are
-// 
+//
 //    - tmpDir
 //    - uploadUrl
 //    - uploadDir
@@ -26,9 +24,6 @@ module.exports = function(app, config) {
 
   upload.configure(config);
   app.use(config.uploadUrl, upload.fileHandler());
-  app.use(config.uploadUrl + "-api", api_upload.fileHandler());
 
-  // app.use("/upload", upload.fileHandler());
-  // upload.on("end", onUploadEnd);
   return upload;
 }
