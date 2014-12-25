@@ -15,6 +15,10 @@ module.exports = Backbone.View.extend({
   },
 
   delete: function() {
-    this.model.destroy()
+    this.model.destroy({
+      success: function(){
+        this.remove();
+      }.bind(this)
+    })
   }
 });

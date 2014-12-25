@@ -27,9 +27,9 @@ module.exports = function(app) {
       var filePath = path.normalize(movieDir + path.sep + filename);
       fs.unlink(filePath, function(err){
         if(err)
-          res.send(500);
+          res.sendStatus(500);
         else
-          res.send(200);
+          res.sendStatus(204);
       });
     });
 
