@@ -16,24 +16,13 @@ module.exports = function(app) {
 
     app.use( "/videos", express.static("./build/videos"));
 
-    /*
-        Routes
-    */
     app.get('/videos', function(req, res, next) {
-        getMovies(function(videoList){
-            res.render("videos",{
-                "videos": videoList
-            });
-        });
-    });
-
-    app.get('/get/videos', function(req, res, next) {
         getMovies(function(videoList){
             res.json(videoList)
         });
     });
 
-    app.all('/videos/delete/:id', function(req, res, next) {
+    app.delete('/videos/:id', function(req, res, next) {
       var filename = req.params.id;
       var filePath = path.normalize(movieDir + path.sep + filename);
       fs.unlink(filePath, function(err){

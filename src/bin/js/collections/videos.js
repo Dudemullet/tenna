@@ -3,5 +3,5 @@ var videoModel = require("../models/video");
 
 module.exports = Backbone.Collection.extend({
   model: videoModel,
-  url: "/get/videos"
+  url: "/videos"
 });
