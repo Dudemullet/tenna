@@ -7,10 +7,7 @@ module.exports = Backbone.View.extend({
   el: "#videolist",
 
   initialize: function() {
-    this.collection = new collection();
-    this.collection.fetch({
-      success: this.render.bind(this)
-    });
+    this.render();
   },
 
   render: function(){

@@ -13,7 +13,7 @@
       <div id="videoplayers" class="row video-player"></div>
       <div id="videolist" class="row"></div>
     </div>
-    <script id="videotemplate" type="text/template">
+    <script id="playerTemplate" type="text/template">
       <video class="col-xs-12 col-sm-12 col-md-12 hide" src="" controls data-vid="<%= name %>" src="<%= stat %>"></video>
     </script>
     <script id="videoicontemplate" type="text/template">
@@ -26,7 +26,9 @@
       <a class="tile-footer btn" href=" <%= stat %> ">Link</a>
       <button class="tile-footer delete-btn btn" data-name="<%= fileName %>">Delete</button>
     </script>
-<script type="text/javascript" src="js/vendor.js"></script>
-</body>
+    <script id="modelData">
+      {{- JSON.stringify(models) }}
+    </script>
+    <script type="text/javascript" src="js/vendor.js"></script>
+  </body>
 </html>
-

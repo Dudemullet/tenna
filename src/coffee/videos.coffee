@@ -7,7 +7,7 @@ $(document).ready ->
       window.location.hash = ''
       return
 
-    scrollConf = 
+    scrollConf =
       scrollTop: $video.offset().top
 
     $('html, body').stop().animate(scrollConf, 500, 'swing', ->

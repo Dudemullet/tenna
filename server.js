@@ -10,13 +10,19 @@ var
   Encoder = require('./lib/encoder'),
   encoder = new Encoder(),
   sets = require("simplesets"),
-  uploadConf = {"uploadUrl":"/upload"};
+  uploadConf = {"uploadUrl":"/upload"},
+  ejs = require("ejs");
 
 app.set("port",config.port);
 app.set("movieExtensions",new sets.Set(config.movieExtensions));
 app.set("movieDir", deployDir + config.movieDir);
 app.set("encodeDir", deployDir + config.encodeDir);
 app.set("uploadDir", deployDir + 'uploads');
+app.set("views", "./views");
+app.set("view engine", "ejs");
+ejs.open="{{";
+ejs.close="}}";
+app.engine("ejs", ejs.__express);
 
 var
   port = app.get("port") || 8080,
@@ -31,21 +37,10 @@ app.enable('strict routing');
 // use the static router
 app.use(express.static(deployDir));
 
-// Routes
-// app.get('/', function (req, res, next) {
-//   video.getMovies(function(videos) {
-//     encoding.getProcessing(function(processing) {
-//       var out = {
-//         "videos":videos.slice(0,10),
-//         "processing":processing
-//       };
-//       res.render("index",out);
-//     })
-//   })
-// });
-
 app.get('/app', function(req, res, next) {
-  res.sendFile("index2.html", {"root":path.resolve(deployDir) });
+  video.getMovies(function(movies){
+    res.render("index", {models: movies});
+  });
 });
 
 upload.on("end",function(fileInfo){
