@@ -10,11 +10,11 @@
   </head>
   <body>
     <div class="container">
-      <div id="videoplayers" class="row video-player"></div>
+      <div id="playerList" class="row video-player"></div>
       <div id="videolist" class="row"></div>
     </div>
     <script id="playerTemplate" type="text/template">
-      <video class="col-xs-12 col-sm-12 col-md-12 hide" src="" controls data-vid="<%= name %>" src="<%= stat %>"></video>
+      <video class="col-xs-12 col-sm-12 col-md-12 hide" controls data-vid="<%= name %>" src="<%= stat %>"></video>
     </script>
     <script id="videoicontemplate" type="text/template">
       <div class="title overflow" title="<%= name %>">

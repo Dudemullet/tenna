@@ -1,6 +1,5 @@
 "use strict";
 
-var collection = require('../collections/videos');
 var VideoView = require('./videos.js');
 
 module.exports = Backbone.View.extend({
