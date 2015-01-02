@@ -4,7 +4,10 @@ var fs = require('fs'),
     escape = require('escape-html'),
     dirExp = require("node-dir"),
     express = require("express"),
-    path = require("path");
+    path = require("path"),
+    upload = require('jquery-file-upload-middleware'),
+    os = require('os'),
+    _ = require('lodash');
 
 module.exports = function(app) {
     var
@@ -12,7 +15,13 @@ module.exports = function(app) {
         encodeDir = app.get("encodeDir"),
         dirCollection = {},
         PATHSEP = path.sep,
-        subExt = "vtt";
+        subExt = "vtt",
+        config = _.extend({
+          tmpDir: os.tmpDir(),
+          uploadDir: app.get('uploadDir'),
+          uploadUrl: '/videos'
+        },config);
+    upload.configure(config);
 
     app.use( "/videos", express.static("./build/videos"));
 
@@ -32,6 +41,8 @@ module.exports = function(app) {
           res.sendStatus(204);
       });
     });
+
+    app.post(config.uploadUrl, upload.fileHandler());
 
     var getMovies = function(cb) {
         var videoList = [];
