@@ -23,7 +23,12 @@ module.exports = function(grunt) {
             },
             deps: {
                 files : [
-                    {cwd:"node_modules/", src:"flat-ui/**", dest:"src/bin/js/libs/", expand:true},
+                    {
+                        cwd:"node_modules/",
+                        src:"flat-ui/**",
+                        dest:"src/bin/js/libs/",
+                        expand:true
+                    },
                     {
                         cwd:"node_modules/blueimp-file-upload/js",
                         src:"jquery.fileupload.js",
@@ -36,6 +41,12 @@ module.exports = function(grunt) {
                         dest:"build/js/libs/",
                         expand:true
                     },
+                    {
+                        cwd:"node_modules/jquery/dist",
+                        src:"jquery.min.js",
+                        dest:"build/js/libs/",
+                        expand:true
+                    }
                 ]
             }
         },
