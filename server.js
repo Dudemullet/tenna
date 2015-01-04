@@ -28,7 +28,6 @@ var
   port = app.get("port") || 8080,
   video = require('./routes/videos')(app),
   encoding = require('./routes/encode')(app),
-  setup = require('./routes/setup')(app),
   upload = require('./routes/upload')(app, uploadConf),
   os = require("os");
 
@@ -37,7 +36,7 @@ app.enable('strict routing');
 // use the static router
 app.use(express.static(deployDir));
 
-app.get('/app', function(req, res, next) {
+app.get('/', function(req, res, next) {
   video.getMovies(function(movies){
     res.render("index", {models: movies});
   });
@@ -45,11 +44,7 @@ app.get('/app', function(req, res, next) {
 
 upload.on("end",function(fileInfo){
   var uploadedFile = path.normalize( deployDir + "/uploads/" +fileInfo.name);
-  if(fileInfo.deleteUrl.match(uploadConf.uploadUrl + "-api"))
-    console.log("File uploaded via api");
-  else {
-    encodeVideo(uploadedFile, deployDir + "/videos");
-  }
+  encodeVideo(uploadedFile, deployDir + "/videos");
 });
 
 var encodeVideo = function(file, outFile) {
